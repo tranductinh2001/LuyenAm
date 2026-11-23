@@ -1485,6 +1485,13 @@
   <!-- 4. CORE APPLICATION JAVASCRIPT LOGIC           -->
   <!-- ============================================== -->
   <script>
+    // Global Safe Lucide Icon Renderer
+    function safeCreateIcons() {
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        try { window.lucide.createIcons(); } catch (e) { console.warn("Lucide render error:", e); }
+      }
+    }
+
     // Global State
     let currentRecAudio = 1;
     let currentRecSpeaker = 1;
@@ -1522,7 +1529,7 @@
         spk1_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_3_Speaker_1.mp3",
         spk2_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_3_Speaker_2.mp3",
         spk1_text: "Hey Luke! Look at the garden! It is 4 o'clock and we still need to pot this plant and put it near the fern. Do not be lazy! Pull the hose near the pool. Be careful not to step on that worm near the rock or a rook might eat it. It is a bird. The bird cooed nicely. It would stay if you did not scare it. By the way, who wooed that girl sitting by the beach? Right. Help me take this box of books inside. Make sure to lock the door so no one will look inside. Haha! Taking a walk with a fast walker like you is fun, even if you are a slow worker. Eat a bun and let us go!",
-        spk2_text: "I could help, but I am full! That warm soup with the cod was delicious. I am no fool to work on a full stomach. Okay, okay. Wait, look at the bed of flowers. Is that a bud or a colorful bird? That is my sister. She is wearing a fur coat because of the cold west wind. But today is the worst wind ever. It made a gull fly away. Do not worry, I will not turn the wrong way. The sign says "turn", not "ten". Let us hurry or the sun will burn us."
+        spk2_text: "I could help, but I am full! That warm soup with the cod was delicious. I am no fool to work on a full stomach. Okay, okay. Wait, look at the bed of flowers. Is that a bud or a colorful bird? That is my sister. She is wearing a fur coat because of the cold west wind. But today is the worst wind ever. It made a gull fly away. Do not worry, I will not turn the wrong way. The sign says 'turn', not 'ten'. Let us hurry or the sun will burn us."
       },
       4: {
         title: "Audio 4: Nguyên âm đôi Diphthongs (/aɪ/, /eə/, /ɪə/, /əʊ/)",
@@ -1544,7 +1551,7 @@
 
     // Initialize application
     async function initApp() {
-      lucide.createIcons();
+      safeCreateIcons();
       await initScriptsData();
       loadAudioAssignment(1);
       filterScriptsTable();
@@ -1576,22 +1583,25 @@
         'lab': 'Voice Synthesis & Cloning Lab',
         'settings': 'Cấu Hình Hệ Thống'
       };
-      document.getElementById('breadcrumb-current-module').innerText = titles[pageId] || pageId;
+      const bEl = document.getElementById('breadcrumb-current-module');
+      if (bEl) bEl.innerText = titles[pageId] || pageId;
 
       toggleSidebar(false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      lucide.createIcons();
+      safeCreateIcons();
     }
 
     function toggleSidebar(open) {
       const sidebar = document.getElementById('app-sidebar');
       const backdrop = document.getElementById('sidebar-backdrop');
-      if (open) {
-        sidebar.classList.remove('-translate-x-full');
-        backdrop.classList.remove('hidden');
-      } else {
-        sidebar.classList.add('-translate-x-full');
-        backdrop.classList.add('hidden');
+      if (sidebar && backdrop) {
+        if (open) {
+          sidebar.classList.remove('-translate-x-full');
+          backdrop.classList.remove('hidden');
+        } else {
+          sidebar.classList.add('-translate-x-full');
+          backdrop.classList.add('hidden');
+        }
       }
     }
 
@@ -1652,12 +1662,14 @@
       currentRecSpeaker = spk;
       const btn1 = document.getElementById('tab-rec-spk-1');
       const btn2 = document.getElementById('tab-rec-spk-2');
-      if (spk === 1) {
-        btn1.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-[#1D4ED8] text-white shadow-sm transition-layout";
-        btn2.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-[#667085] border border-[#E5EAF1] hover:text-[#172033] transition-layout";
-      } else {
-        btn2.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-[#101D35] text-white shadow-sm transition-layout";
-        btn1.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-[#667085] border border-[#E5EAF1] hover:text-[#172033] transition-layout";
+      if (btn1 && btn2) {
+        if (spk === 1) {
+          btn1.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-[#1D4ED8] text-white shadow-sm transition-layout";
+          btn2.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-[#667085] border border-[#E5EAF1] hover:text-[#172033] transition-layout";
+        } else {
+          btn2.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-[#101D35] text-white shadow-sm transition-layout";
+          btn1.className = "px-4 py-1.5 rounded-lg text-xs font-bold bg-white text-[#667085] border border-[#E5EAF1] hover:text-[#172033] transition-layout";
+        }
       }
       renderRecorderSentences();
     }
@@ -1679,8 +1691,9 @@
     // Render sentences list in Studio
     function renderRecorderSentences() {
       const container = document.getElementById('recorder-sentences-container');
-      const sentences = getCurrentSentences();
+      if (!container) return;
 
+      const sentences = getCurrentSentences();
       if (!sentences || sentences.length === 0) {
         container.innerHTML = `<div class="bg-white border border-[#E5EAF1] rounded-xl p-8 text-center text-[#667085] text-xs">Đang tải danh sách câu thoại...</div>`;
         return;
@@ -1750,16 +1763,24 @@
       });
 
       container.innerHTML = html;
-      lucide.createIcons();
+      safeCreateIcons();
 
       const total = sentences.length;
       const pct = Math.round((recordedCount / total) * 100);
-      document.getElementById('recorder-progress-text').innerText = `${recordedCount} / ${total} câu`;
-      document.getElementById('recorder-progress-bar').style.width = `${pct}%`;
+      const progTxt = document.getElementById('recorder-progress-text');
+      const progBar = document.getElementById('recorder-progress-bar');
+      if (progTxt) progTxt.innerText = `${recordedCount} / ${total} câu`;
+      if (progBar) progBar.style.width = `${pct}%`;
     }
 
     function escapeHtml(text) {
-      return text.replace(/'/g, "\'").replace(/"/g, '&quot;');
+      if (!text) return '';
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
 
     // Play native sample using Edge TTS
@@ -1767,7 +1788,7 @@
       const origHtml = btnElement.innerHTML;
       btnElement.disabled = true;
       btnElement.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Đang tải...`;
-      lucide.createIcons();
+      safeCreateIcons();
       try {
         const res = await fetch('/api/voice/tts', {
           method: 'POST',
@@ -1790,7 +1811,7 @@
       } finally {
         btnElement.disabled = false;
         btnElement.innerHTML = origHtml;
-        lucide.createIcons();
+        safeCreateIcons();
       }
     }
 
@@ -1892,7 +1913,7 @@
 
           updateProgressStats();
           showToast('success', 'Thu âm hoàn tất', `Câu ${idx + 1} (${recordingSeconds}s) đã được ghi lại thành công.`);
-          lucide.createIcons();
+          safeCreateIcons();
 
           activeRecordingIndex = null;
           activeMediaRecorder = null;
@@ -1963,7 +1984,7 @@
       if (btnEval) {
         btnEval.disabled = true;
         btnEval.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Đang chấm điểm...`;
-        lucide.createIcons();
+        safeCreateIcons();
       }
 
       try {
@@ -1982,23 +2003,27 @@
         const data = await res.json();
         rec.evalData = data;
 
-        evalBox.innerHTML = renderEvaluationHtml(data, idx);
-        evalBox.classList.remove('hidden');
-        lucide.createIcons();
+        if (evalBox) {
+          evalBox.innerHTML = renderEvaluationHtml(data, idx);
+          evalBox.classList.remove('hidden');
+        }
+        safeCreateIcons();
         showToast('success', 'Chấm điểm thành công', `Điểm phát âm: ${data.score || 0}/100.`);
 
       } catch (err) {
         // Fallback local evaluation
         const fallbackData = computeClientPhoneticScore(targetText, rec.spokenText || "");
         rec.evalData = fallbackData;
-        evalBox.innerHTML = renderEvaluationHtml(fallbackData, idx);
-        evalBox.classList.remove('hidden');
-        lucide.createIcons();
+        if (evalBox) {
+          evalBox.innerHTML = renderEvaluationHtml(fallbackData, idx);
+          evalBox.classList.remove('hidden');
+        }
+        safeCreateIcons();
       } finally {
         if (btnEval) {
           btnEval.disabled = false;
           btnEval.innerHTML = `<i data-lucide="target" class="w-3.5 h-3.5"></i> Chấm Điểm Lại`;
-          lucide.createIcons();
+          safeCreateIcons();
         }
       }
     }
@@ -2093,8 +2118,10 @@
       });
       const total = sentences.length;
       const pct = Math.round((count / total) * 100);
-      document.getElementById('recorder-progress-text').innerText = `${count} / ${total} câu`;
-      document.getElementById('recorder-progress-bar').style.width = `${pct}%`;
+      const progTxt = document.getElementById('recorder-progress-text');
+      const progBar = document.getElementById('recorder-progress-bar');
+      if (progTxt) progTxt.innerText = `${count} / ${total} câu`;
+      if (progBar) progBar.style.width = `${pct}%`;
     }
 
     // Merge All Sentences with FFmpeg
@@ -2105,8 +2132,10 @@
         return;
       }
 
-      const autoFallback = document.getElementById('chk-auto-fallback').checked;
-      const silenceMs = parseInt(document.getElementById('sel-silence-ms').value, 10);
+      const chkFallback = document.getElementById('chk-auto-fallback');
+      const selSilence = document.getElementById('sel-silence-ms');
+      const autoFallback = chkFallback ? chkFallback.checked : true;
+      const silenceMs = selSilence ? parseInt(selSilence.value, 10) : 350;
       const mergeBtn = document.getElementById('btn-merge-all');
       const mergeText = document.getElementById('btn-merge-text');
 
@@ -2139,8 +2168,8 @@
         return;
       }
 
-      mergeBtn.disabled = true;
-      mergeText.innerText = `Đang cắt ghép ${sentences.length} câu...`;
+      if (mergeBtn) mergeBtn.disabled = true;
+      if (mergeText) mergeText.innerText = `Đang cắt ghép ${sentences.length} câu...`;
 
       try {
         const res = await fetch('/api/voice/merge-sentences', {
@@ -2163,16 +2192,20 @@
           const details = document.getElementById('merged-status-details');
 
           const finalUrl = data.audioUrl + '?t=' + Date.now();
-          player.src = finalUrl;
-          dl.href = data.audioUrl;
-          dl.download = data.fileName;
+          if (player) player.src = finalUrl;
+          if (dl) {
+            dl.href = data.audioUrl;
+            dl.download = data.fileName;
+          }
 
-          title.innerText = `Đã Ghép Xong Bài Nộp Audio ${currentRecAudio} - Speaker ${currentRecSpeaker}!`;
-          details.innerText = `Ghép thành công ${data.mergedCount} câu (gồm ${recordedCount} câu giọng thật của bạn).`;
+          if (title) title.innerText = `Đã Ghép Xong Bài Nộp Audio ${currentRecAudio} - Speaker ${currentRecSpeaker}!`;
+          if (details) details.innerText = `Ghép thành công ${data.mergedCount} câu (gồm ${recordedCount} câu giọng thật của bạn).`;
 
-          card.classList.remove('hidden');
-          card.scrollIntoView({ behavior: 'smooth' });
-          player.play();
+          if (card) {
+            card.classList.remove('hidden');
+            card.scrollIntoView({ behavior: 'smooth' });
+          }
+          if (player) player.play();
 
           showToast('success', 'Ghép hoàn tất', `Bài Nộp Audio ${currentRecAudio} đã sẵn sàng nộp cô!`);
         } else {
@@ -2181,8 +2214,8 @@
       } catch (e) {
         showToast('error', 'Lỗi kết nối', e.message);
       } finally {
-        mergeBtn.disabled = false;
-        mergeText.innerText = "Ghép Thành File MP3 Hoàn Chỉnh";
+        if (mergeBtn) mergeBtn.disabled = false;
+        if (mergeText) mergeText.innerText = "Ghép Thành File MP3 Hoàn Chỉnh";
       }
     }
 
@@ -2201,6 +2234,7 @@
 
       const d = AUDIOS_DATA[num];
       const container = document.getElementById('assignment-content-card');
+      if (!container || !d) return;
 
       container.innerHTML = `
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E5EAF1] pb-4">
@@ -2251,12 +2285,13 @@
           </div>
         </div>
       `;
-      lucide.createIcons();
+      safeCreateIcons();
     }
 
     // Filter Scripts Table in View 6
     function filterScriptsTable() {
-      const query = (document.getElementById('script-search-input')?.value || '').toLowerCase().trim();
+      const qInput = document.getElementById('script-search-input');
+      const query = (qInput ? qInput.value : '').toLowerCase().trim();
       const filterAudio = document.getElementById('script-filter-audio')?.value || 'all';
       const filterSpeaker = document.getElementById('script-filter-speaker')?.value || 'all';
       const tbody = document.getElementById('scripts-table-body');
@@ -2274,7 +2309,7 @@
 
         ['speaker_1', 'speaker_2'].forEach((spkKey, sIdx) => {
           const spkNum = sIdx + 1;
-          if (filterSpeaker !== 'all' && String(spkNum) !== filterSpeaker) continue;
+          if (filterSpeaker !== 'all' && String(spkNum) !== filterSpeaker) return;
 
           (lesson[spkKey] || []).forEach(item => {
             totalRows++;
@@ -2328,15 +2363,20 @@
 
     // Natural TTS Generator
     async function generateFreeTts() {
-      const text = document.getElementById('tts-free-text').value.trim();
-      const voice = document.getElementById('tts-free-voice').value;
-      const rate = document.getElementById('tts-free-rate').value;
+      const txtEl = document.getElementById('tts-free-text');
+      const voiceEl = document.getElementById('tts-free-voice');
+      const rateEl = document.getElementById('tts-free-rate');
+      const text = txtEl ? txtEl.value.trim() : '';
+      const voice = voiceEl ? voiceEl.value : 'en-US-BrianMultilingualNeural';
+      const rate = rateEl ? rateEl.value : '-3%';
       const btn = document.getElementById('btn-free-tts');
 
       if (!text) return showToast('warning', 'Thiếu dữ liệu', 'Vui lòng nhập văn bản cần đọc!');
-      btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Đang sinh âm thanh...`;
-      lucide.createIcons();
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Đang sinh âm thanh...`;
+        safeCreateIcons();
+      }
 
       try {
         const res = await fetch('/api/voice/tts', {
@@ -2349,10 +2389,10 @@
           const resBox = document.getElementById('free-tts-result');
           const player = document.getElementById('free-tts-audio');
           const dl = document.getElementById('free-tts-download');
-          player.src = data.audioUrl + '?t=' + Date.now();
-          dl.href = data.audioUrl;
-          resBox.classList.remove('hidden');
-          player.play();
+          if (player) player.src = data.audioUrl + '?t=' + Date.now();
+          if (dl) dl.href = data.audioUrl;
+          if (resBox) resBox.classList.remove('hidden');
+          if (player) player.play();
           showToast('success', 'Thành công', 'Đã tạo giọng đọc tự nhiên.');
         } else {
           showToast('error', 'Lỗi', data.error || 'Không thể tạo âm thanh');
@@ -2360,26 +2400,33 @@
       } catch (e) {
         showToast('error', 'Lỗi kết nối', e.message);
       } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="play-circle" class="w-4 h-4"></i> Sinh Giọng Đọc Ngay`;
-        lucide.createIcons();
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="play-circle" class="w-4 h-4"></i> Sinh Giọng Đọc Ngay`;
+          safeCreateIcons();
+        }
       }
     }
 
     // Prompt-based Voice Generator
     function setGenPrompt(p) {
-      document.getElementById('gen-prompt').value = p;
+      const el = document.getElementById('gen-prompt');
+      if (el) el.value = p;
     }
 
     async function generateCustomPromptAudio() {
-      const text = document.getElementById('gen-text').value.trim();
-      const prompt = document.getElementById('gen-prompt').value.trim();
+      const txtEl = document.getElementById('gen-text');
+      const prEl = document.getElementById('gen-prompt');
+      const text = txtEl ? txtEl.value.trim() : '';
+      const prompt = prEl ? prEl.value.trim() : '';
       const btn = document.getElementById('btn-custom-prompt');
 
       if (!text) return showToast('warning', 'Thiếu dữ liệu', 'Vui lòng nhập văn bản cần sinh giọng!');
-      btn.disabled = true;
-      btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Đang áp dụng prompt...`;
-      lucide.createIcons();
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader" class="w-4 h-4 animate-spin"></i> Đang áp dụng prompt...`;
+        safeCreateIcons();
+      }
 
       try {
         const res = await fetch('/api/voice/clone', {
@@ -2392,10 +2439,10 @@
           const card = document.getElementById('gen-result-card');
           const player = document.getElementById('gen-audio-player');
           const dl = document.getElementById('gen-download-btn');
-          player.src = data.audioUrl + '?t=' + Date.now();
-          dl.href = data.audioUrl;
-          card.classList.remove('hidden');
-          player.play();
+          if (player) player.src = data.audioUrl + '?t=' + Date.now();
+          if (dl) dl.href = data.audioUrl;
+          if (card) card.classList.remove('hidden');
+          if (player) player.play();
           showToast('success', 'Thành công', 'Đã sinh âm thanh theo prompt định hướng.');
         } else {
           showToast('error', 'Lỗi', data.error || 'Lỗi server');
@@ -2403,9 +2450,11 @@
       } catch (err) {
         showToast('error', 'Lỗi kết nối', err.message);
       } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4"></i> Sinh Giọng Đọc Theo Prompt Này`;
-        lucide.createIcons();
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4"></i> Sinh Giọng Đọc Theo Prompt Này`;
+          safeCreateIcons();
+        }
       }
     }
 
@@ -2423,8 +2472,8 @@
       if (isRecordingStt) {
         if (sttRecognitionInstance) sttRecognitionInstance.stop();
         isRecordingStt = false;
-        btn.className = "w-20 h-20 rounded-full bg-[#1D4ED8] hover:bg-[#1E40AF] text-white flex items-center justify-center shadow-lg transition-all";
-        statusText.innerText = "Bấm vào micro để bắt đầu nói tiếng Anh";
+        if (btn) btn.className = "w-20 h-20 rounded-full bg-[#1D4ED8] hover:bg-[#1E40AF] text-white flex items-center justify-center shadow-lg transition-all";
+        if (statusText) statusText.innerText = "Bấm vào micro để bắt đầu nói tiếng Anh";
       } else {
         sttRecognitionInstance = new SpeechRecognition();
         sttRecognitionInstance.continuous = true;
@@ -2433,9 +2482,9 @@
 
         sttRecognitionInstance.onstart = () => {
           isRecordingStt = true;
-          btn.className = "w-20 h-20 rounded-full bg-[#DC4545] text-white flex items-center justify-center shadow-lg is-recording transition-all";
-          statusText.innerText = "Đang lắng nghe... Hãy nói tiếng Anh ngay bây giờ!";
-          box.innerHTML = '';
+          if (btn) btn.className = "w-20 h-20 rounded-full bg-[#DC4545] text-white flex items-center justify-center shadow-lg is-recording transition-all";
+          if (statusText) statusText.innerText = "Đang lắng nghe... Hãy nói tiếng Anh ngay bây giờ!";
+          if (box) box.innerHTML = '';
         };
 
         sttRecognitionInstance.onresult = (e) => {
@@ -2443,19 +2492,19 @@
           for (let i = 0; i < e.results.length; i++) {
             str += e.results[i][0].transcript + ' ';
           }
-          box.innerText = str;
+          if (box) box.innerText = str;
         };
 
         sttRecognitionInstance.onerror = () => {
           isRecordingStt = false;
-          btn.className = "w-20 h-20 rounded-full bg-[#1D4ED8] text-white flex items-center justify-center";
-          statusText.innerText = "Đã dừng hoặc chưa cấp quyền mic.";
+          if (btn) btn.className = "w-20 h-20 rounded-full bg-[#1D4ED8] text-white flex items-center justify-center";
+          if (statusText) statusText.innerText = "Đã dừng hoặc chưa cấp quyền mic.";
         };
 
         sttRecognitionInstance.onend = () => {
           isRecordingStt = false;
-          btn.className = "w-20 h-20 rounded-full bg-[#1D4ED8] text-white flex items-center justify-center";
-          statusText.innerText = "Bấm micro để tiếp tục nói";
+          if (btn) btn.className = "w-20 h-20 rounded-full bg-[#1D4ED8] text-white flex items-center justify-center";
+          if (statusText) statusText.innerText = "Bấm micro để tiếp tục nói";
         };
 
         sttRecognitionInstance.start();
@@ -2490,29 +2539,33 @@
         hubMediaRecorder.onstop = () => {
           stream.getTracks().forEach(t => t.stop());
           clearInterval(hubTimer);
-          timer.classList.add('hidden');
-          label.innerText = "Thu âm để chấm điểm";
-          btn.className = "px-4 py-2 rounded-lg bg-[#DC4545] hover:bg-[#B91C1C] text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-layout";
+          if (timer) timer.classList.add('hidden');
+          if (label) label.innerText = "Thu âm để chấm điểm";
+          if (btn) btn.className = "px-4 py-2 rounded-lg bg-[#DC4545] hover:bg-[#B91C1C] text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-layout";
 
           const blob = new Blob(hubAudioChunks, { type: 'audio/webm' });
-          player.src = URL.createObjectURL(blob);
-          player.classList.remove('hidden');
-          player.play();
+          if (player) {
+            player.src = URL.createObjectURL(blob);
+            player.classList.remove('hidden');
+            player.play();
+          }
           showToast('success', 'Thu hoàn tất', 'Đã ghi âm mẫu thử để chấm điểm.');
         };
 
         hubMediaRecorder.start();
         hubSeconds = 0;
-        label.innerText = "Dừng thu âm";
-        btn.className = "px-4 py-2 rounded-lg bg-[#DC4545] text-white text-xs font-bold flex items-center gap-2 is-recording shadow-sm";
-        timer.classList.remove('hidden');
-        timer.innerText = "00:00";
+        if (label) label.innerText = "Dừng thu âm";
+        if (btn) btn.className = "px-4 py-2 rounded-lg bg-[#DC4545] text-white text-xs font-bold flex items-center gap-2 is-recording shadow-sm";
+        if (timer) {
+          timer.classList.remove('hidden');
+          timer.innerText = "00:00";
+        }
 
         hubTimer = setInterval(() => {
           hubSeconds++;
           const mins = String(Math.floor(hubSeconds / 60)).padStart(2, '0');
           const secs = String(hubSeconds % 60).padStart(2, '0');
-          timer.innerText = `${mins}:${secs}`;
+          if (timer) timer.innerText = `${mins}:${secs}`;
         }, 1000);
 
       } catch (err) {
@@ -2522,36 +2575,44 @@
 
     // Modal & Popover Controls
     function openBeeConfigModal() {
-      document.getElementById('bee-modal').classList.remove('hidden');
+      const m = document.getElementById('bee-modal');
+      if (m) m.classList.remove('hidden');
     }
     function closeBeeModal() {
-      document.getElementById('bee-modal').classList.add('hidden');
+      const m = document.getElementById('bee-modal');
+      if (m) m.classList.add('hidden');
     }
     function saveBeeKeyModal() {
-      const val = document.getElementById('input-bee-key').value.trim();
+      const input = document.getElementById('input-bee-key');
+      const val = input ? input.value.trim() : '';
       if (!val) return showToast('warning', 'Cảnh báo', 'API Key không được để trống.');
       userBeeApiKey = val;
       localStorage.setItem('bee_api_key', val);
-      document.getElementById('settings-bee-key').value = val;
+      const setKey = document.getElementById('settings-bee-key');
+      if (setKey) setKey.value = val;
       closeBeeModal();
       showToast('success', 'Đã lưu', 'Beekone API Key đã được cập nhật thành công!');
     }
 
     function toggleNotificationDropdown() {
       const d = document.getElementById('notification-dropdown');
-      d.classList.toggle('hidden');
+      if (d) d.classList.toggle('hidden');
     }
 
     function openCommandPalette() {
-      document.getElementById('command-palette-modal').classList.remove('hidden');
-      document.getElementById('command-palette-input').focus();
+      const m = document.getElementById('command-palette-modal');
+      const input = document.getElementById('command-palette-input');
+      if (m) m.classList.remove('hidden');
+      if (input) input.focus();
     }
     function closeCommandPalette() {
-      document.getElementById('command-palette-modal').classList.add('hidden');
+      const m = document.getElementById('command-palette-modal');
+      if (m) m.classList.add('hidden');
     }
 
     function filterPaletteCommands() {
-      const q = document.getElementById('command-palette-input').value.toLowerCase();
+      const input = document.getElementById('command-palette-input');
+      const q = input ? input.value.toLowerCase() : '';
       const items = document.querySelectorAll('#command-palette-results button');
       items.forEach(it => {
         if (!q || it.innerText.toLowerCase().includes(q)) {
@@ -2578,28 +2639,32 @@
     function quickPlayAudio(url) {
       const modal = document.getElementById('quick-player-modal');
       const audio = document.getElementById('quick-player-audio');
-      audio.src = url;
-      modal.classList.remove('hidden');
-      audio.play();
+      if (audio && modal) {
+        audio.src = url;
+        modal.classList.remove('hidden');
+        audio.play();
+      }
     }
     function closeQuickPlayer() {
       const modal = document.getElementById('quick-player-modal');
       const audio = document.getElementById('quick-player-audio');
-      audio.pause();
-      modal.classList.add('hidden');
+      if (audio) audio.pause();
+      if (modal) modal.classList.add('hidden');
     }
 
     function togglePasswordVisibility(id) {
       const el = document.getElementById(id);
-      el.type = el.type === 'password' ? 'text' : 'password';
+      if (el) el.type = el.type === 'password' ? 'text' : 'password';
     }
 
     function saveSettings() {
-      const key = document.getElementById('settings-bee-key').value.trim();
+      const keyEl = document.getElementById('settings-bee-key');
+      const key = keyEl ? keyEl.value.trim() : '';
       if (key) {
         userBeeApiKey = key;
         localStorage.setItem('bee_api_key', key);
-        document.getElementById('input-bee-key').value = key;
+        const inKey = document.getElementById('input-bee-key');
+        if (inKey) inKey.value = key;
       }
       showToast('success', 'Thành công', 'Toàn bộ cài đặt hệ thống đã được lưu vào trình duyệt.');
     }
@@ -2607,6 +2672,7 @@
     // Toast Notification System
     function showToast(type, title, message) {
       const container = document.getElementById('toast-container');
+      if (!container) return;
       const toast = document.createElement('div');
       
       let borderClass = 'border-[#E5EAF1] bg-white text-[#172033]';
@@ -2632,7 +2698,7 @@
       `;
 
       container.appendChild(toast);
-      lucide.createIcons();
+      safeCreateIcons();
 
       setTimeout(() => {
         toast.style.opacity = '0';
@@ -2640,6 +2706,36 @@
         setTimeout(() => toast.remove(), 300);
       }, 4000);
     }
+
+    // Explicitly bind all public functions to window for 100% inline onclick reliability
+    window.navigateTo = navigateTo;
+    window.toggleSidebar = toggleSidebar;
+    window.selectRecorderAudio = selectRecorderAudio;
+    window.selectRecorderSpeaker = selectRecorderSpeaker;
+    window.selectAndGoToStudio = selectAndGoToStudio;
+    window.playNativeSample = playNativeSample;
+    window.toggleRecordSentence = toggleRecordSentence;
+    window.evaluateRecordedSentence = evaluateRecordedSentence;
+    window.mergeAllSentences = mergeAllSentences;
+    window.loadAudioAssignment = loadAudioAssignment;
+    window.filterScriptsTable = filterScriptsTable;
+    window.generateFreeTts = generateFreeTts;
+    window.setGenPrompt = setGenPrompt;
+    window.generateCustomPromptAudio = generateCustomPromptAudio;
+    window.toggleMicrophoneStt = toggleMicrophoneStt;
+    window.runQuickHubRecording = runQuickHubRecording;
+    window.openBeeConfigModal = openBeeConfigModal;
+    window.closeBeeModal = closeBeeModal;
+    window.saveBeeKeyModal = saveBeeKeyModal;
+    window.toggleNotificationDropdown = toggleNotificationDropdown;
+    window.openCommandPalette = openCommandPalette;
+    window.closeCommandPalette = closeCommandPalette;
+    window.filterPaletteCommands = filterPaletteCommands;
+    window.quickPlayAudio = quickPlayAudio;
+    window.closeQuickPlayer = closeQuickPlayer;
+    window.togglePasswordVisibility = togglePasswordVisibility;
+    window.saveSettings = saveSettings;
+    window.showToast = showToast;
 
     // Start App on Load
     document.addEventListener('DOMContentLoaded', () => {
