@@ -1,0 +1,150 @@
+======================================================================
+TỔNG HỢP KỊCH BẢN 5 BÀI LUYỆN ÂM (ĐÃ TỐI ƯU HÓA NGỮ ĐIỆU HỌC VIÊN ~85%)
+Dùng để copy trực tiếp vào ElevenLabs hoặc Google Colab để Clone giọng
+======================================================================
+
+######################### AUDIO 1 #########################
+
+--- [AUDIO 1 - VAI SPEAKER 1] ---
+Hey Brad, ... are you ready to leave? ... Did you peel the apples ... and put the peel in the bin? ... 
+Oh no, ... stop it leaking! do not just let the dog lick it! Take a pin ... or a peg to fix it.
+Wait, ... do we need bread ... or jam? ... 
+Got it. Should I bring a pen to write down the bill, ... ... or maybe a cheque? ... 
+Okay. By the way, ... where are we going to live during the trip? ... Near the sheep ... or near the big ship? ... 
+Awesome! Ring the bell, ... mark an X on the map, ... ... and let us go!
+
+--- [AUDIO 1 - VAI SPEAKER 2] ---
+Yes, ... I did. ... But look at the sink. it is starting to leak!
+Fixed! Now, ... what about the food? ... Should I pack this tin of beans? ... 
+Both! Put the bread in a pan, ... ... and throw out that old bean in the bin.
+Just bring a pen. Oh, ... ... and do not forget to send a message to the men at the farm.
+Near the field. We can see the cute little chicks with yellow cheeks, ... a little pig, ... ... and maybe even a sheep.
+
+--- [AUDIO 1 - TOÀN BỘ ĐỐI THOẠI (CẢ 2 VAI)] ---
+Speaker 1: Hey Brad, ... are you ready to leave? ... Did you peel the apples ... and put the peel in the bin? ... 
+Speaker 2: Yes, ... I did. ... But look at the sink. it is starting to leak!
+Speaker 1: Oh no, ... stop it leaking! do not just let the dog lick it! Take a pin ... or a peg to fix it.
+Speaker 2: Fixed! Now, ... what about the food? ... Should I pack this tin of beans? ... 
+Speaker 1: Wait, ... do we need bread ... or jam? ... 
+Speaker 2: Both! Put the bread in a pan, ... ... and throw out that old bean in the bin.
+Speaker 1: Got it. Should I bring a pen to write down the bill, ... ... or maybe a cheque? ... 
+Speaker 2: Just bring a pen. Oh, ... ... and do not forget to send a message to the men at the farm.
+Speaker 1: Okay. By the way, ... where are we going to live during the trip? ... Near the sheep ... or near the big ship? ... 
+Speaker 2: Near the field. We can see the cute little chicks with yellow cheeks, ... a little pig, ... ... and maybe even a sheep.
+Speaker 1: Awesome! Ring the bell, ... mark an X on the map, ... ... and let us go!
+
+
+######################### AUDIO 2 #########################
+
+--- [AUDIO 2 - VAI SPEAKER 1] ---
+Hey Dawn, ... are you ready to pack for the trip? ... Remember to park the truck near the old barn, ... not near the small hut.
+Calm down, ... Dawn. Keep the cat in its cot, ... ... and come check the food. We have a fresh bun, ... some fried carp, ... ... and a fresh cod.
+Put it in a sack, ... then tie it with a cord. Oh, ... watch out for that nasty bug on the cart!
+Here is your hat ... and your favorite cap. Drink a cup of water, ... turn off the tap, ... ... and put a top on the pot.
+
+--- [AUDIO 2 - VAI SPEAKER 2] ---
+Got it, ... Don! Is there a ban on bringing animals? ... My cat wants to chase a fox in the park.
+Great! Put the cod ... and carp in a pot, ... ... and bring some forks. Should I put the bun into a sack ... or a box? ... 
+Ouch! It bit my ankle! My uncle told me to be careful. Where is my hat? ... it is hot weather outside.
+Done! I also sent a fax to your uncle. Now, ... let us carry in these heavy sacks. My heart is beating fast, ... ... but I am ready for some outdoor sport!
+
+--- [AUDIO 2 - TOÀN BỘ ĐỐI THOẠI (CẢ 2 VAI)] ---
+Speaker 1 (Don): Hey Dawn, ... are you ready to pack for the trip? ... Remember to park the truck near the old barn, ... not near the small hut.
+Speaker 2 (Dawn): Got it, ... Don! Is there a ban on bringing animals? ... My cat wants to chase a fox in the park.
+Speaker 1 (Don): Calm down, ... Dawn. Keep the cat in its cot, ... ... and come check the food. We have a fresh bun, ... some fried carp, ... ... and a fresh cod.
+Speaker 2 (Dawn): Great! Put the cod ... and carp in a pot, ... ... and bring some forks. Should I put the bun into a sack ... or a box? ... 
+Speaker 1 (Don): Put it in a sack, ... then tie it with a cord. Oh, ... watch out for that nasty bug on the cart!
+Speaker 2 (Dawn): Ouch! It bit my ankle! My uncle told me to be careful. Where is my hat? ... it is hot weather outside.
+Speaker 1 (Don): Here is your hat ... and your favorite cap. Drink a cup of water, ... turn off the tap, ... ... and put a top on the pot.
+Speaker 2 (Dawn): Done! I also sent a fax to your uncle. Now, ... let us carry in these heavy sacks. My heart is beating fast, ... ... but I am ready for some outdoor sport!
+
+
+######################### AUDIO 3 #########################
+
+--- [AUDIO 3 - VAI SPEAKER 1] ---
+Hey Luke, ... look at the garden! it is 4 o'clock ... and we still need to pot this plant ... and put it near the fern.
+do not be lazy! Pull the hose near the pool. Be careful not to step on that worm near the rock ... or a rook might eat it.
+it is a bird. The bird cooed nicely. It would stay if you did not scare it. By the way, ... who wooed that girl sitting by the beach? ... 
+Right. Help me take this box of books inside. Make sure to lock the door ... so no one will look inside.
+Haha! Taking a walk with a fast walker like you is fun, ... even if you are a slow worker. Eat a bun ... and let us go!
+
+--- [AUDIO 3 - VAI SPEAKER 2] ---
+I could help, ... ... but I am full! That warm soup with the cod was delicious. I am no fool to work on a full stomach.
+Okay, ... okay. Wait, ... look at the bed of flowers. Is that a bud ... or a colorful bird? ... 
+that is my sister. She's wearing fur coat ... because of the cold west wind. ... But today is the worst wind ever. It made a gull fly away.
+do not worry, ... I will not turn the wrong way. The sign says "turn", ... not "ten". let us hurry ... or the sun will burn us.
+
+--- [AUDIO 3 - TOÀN BỘ ĐỐI THOẠI (CẢ 2 VAI)] ---
+Speaker 1: Hey Luke, ... look at the garden! it is 4 o'clock ... and we still need to pot this plant ... and put it near the fern.
+Speaker 2 (Luke): I could help, ... ... but I am full! That warm soup with the cod was delicious. I am no fool to work on a full stomach.
+Speaker 1: do not be lazy! Pull the hose near the pool. Be careful not to step on that worm near the rock ... or a rook might eat it.
+Speaker 2 (Luke): Okay, ... okay. Wait, ... look at the bed of flowers. Is that a bud ... or a colorful bird? ... 
+Speaker 1: it is a bird. The bird cooed nicely. It would stay if you did not scare it. By the way, ... who wooed that girl sitting by the beach? ... 
+Speaker 2 (Luke): that is my sister. She's wearing fur coat ... because of the cold west wind. ... But today is the worst wind ever. It made a gull fly away.
+Speaker 1: Right. Help me take this box of books inside. Make sure to lock the door ... so no one will look inside.
+Speaker 2 (Luke): do not worry, ... I will not turn the wrong way. The sign says "turn", ... not "ten". let us hurry ... or the sun will burn us.
+Speaker 1: Haha! Taking a walk with a fast walker like you is fun, ... even if you are a slow worker. Eat a bun ... and let us go!
+
+
+######################### AUDIO 4 #########################
+
+--- [AUDIO 4 - VAI SPEAKER 1] ---
+Hey Jane, ... take a look at the boat! Did you put the fresh pie ... and the pear into the bowl? ... 
+do not worry. Ouch! A sharp bone in this chicken hit my brow.
+I am fine. Look, ... there is a big cow standing in the shade near the wooden chairs. What an odd age we live in.
+Nice! let us sit by the pier, ... drink a cold beer, ... ... and take a taste of the pie.
+Wow, ... I see a golden coin on that board! Should I bow down to pick it up? ... 
+do not worry, ... I will not lose a single tear. Pass me that paper to wrap the food, ... ... and let us ride my bike home after this.
+
+--- [AUDIO 4 - VAI SPEAKER 2] ---
+Yes, ... Roy, ... ... but wait, ... do not drop that hot oil! It can boil quickly ... and cause a terrible pain.
+Oh, ... let me check. Keep your eye open. Thank goodness, ... it did not hit your ear ... or your beard.
+Haha! Take a note of this: I woke up early to buy this toy kite for my nephew. Check its height when it flies!
+Good idea. The ocean air is ... so fresh! Watch that wooden board float near the pier.
+Be careful, ... ... or you will tear your new coat! do not grouse if you drop your phone into the water.
+Great! Look, ... that fluffy bear toy on the boat has funny hair. let us go, ... Joe is waiting for us.
+
+--- [AUDIO 4 - TOÀN BỘ ĐỐI THOẠI (CẢ 2 VAI)] ---
+Speaker 1 (Roy): Hey Jane, ... take a look at the boat! Did you put the fresh pie ... and the pear into the bowl? ... 
+Speaker 2 (Jane): Yes, ... Roy, ... ... but wait, ... do not drop that hot oil! It can boil quickly ... and cause a terrible pain.
+Speaker 1 (Roy): do not worry. Ouch! A sharp bone in this chicken hit my brow.
+Speaker 2 (Jane): Oh, ... let me check. Keep your eye open. Thank goodness, ... it did not hit your ear ... or your beard.
+Speaker 1 (Roy): I am fine. Look, ... there is a big cow standing in the shade near the wooden chairs. What an odd age we live in.
+Speaker 2 (Jane): Haha! Take a note of this: I woke up early to buy this toy kite for my nephew. Check its height when it flies!
+Speaker 1 (Roy): Nice! let us sit by the pier, ... drink a cold beer, ... ... and take a taste of the pie.
+Speaker 2 (Jane): Good idea. The ocean air is ... so fresh! Watch that wooden board float near the pier.
+Speaker 1 (Roy): Wow, ... I see a golden coin on that board! Should I bow down to pick it up? ... 
+Speaker 2 (Jane): Be careful, ... ... or you will tear your new coat! do not grouse if you drop your phone into the water.
+Speaker 1 (Roy): do not worry, ... I will not lose a single tear. Pass me that paper to wrap the food, ... ... and let us ride my bike home after this.
+Speaker 2 (Jane): Great! Look, ... that fluffy bear toy on the boat has funny hair. let us go, ... Joe is waiting for us.
+
+
+######################### AUDIO 5 #########################
+
+--- [AUDIO 5 - VAI SPEAKER 1] ---
+Hey Poppy, ... did you get a pen to write your age ... and name on this card? ... 
+Are you choking ... or joking? ... Wow, ... look at the collision outside the shoe shop! An ambulance is taking a casualty to the hospital.
+Got it. let us sip some tea first. Did you pack the pear ... and the little bear toy into the bin? ... 
+Okay. I need to measure my feet for new casual shoes. Occasionally, ... I get a foot massage after a long walk.
+Wow! Should I sew a letter H ... or a C on my jacket? ... 
+
+--- [AUDIO 5 - VAI SPEAKER 2] ---
+Yes, ... Ben, ... ... but wait! Look at Sue! She is trying to push that cheap green Jeep near the pub.
+Oh no, ... I hope everyone is safe. By the way, ... Bobby asked us to ship this large box of cherries to Jerry's house.
+No, ... I put them in a bag. Throw out that old pin ... and that ash from the barbecue. do not drop your cap inside the cab.
+Good idea. Show me your shoe size. Look at that larch tree on the ridges. The mountain is full of natural riches.
+Write H. Now, ... help me catch that cute pup. Puss! Come here, ... little doggy!
+
+--- [AUDIO 5 - TOÀN BỘ ĐỐI THOẠI (CẢ 2 VAI)] ---
+Speaker 1 (Ben): Hey Poppy, ... did you get a pen to write your age ... and name on this card? ... 
+Speaker 2 (Poppy): Yes, ... Ben, ... ... but wait! Look at Sue! She is trying to push that cheap green Jeep near the pub.
+Speaker 1 (Ben): Are you choking ... or joking? ... Wow, ... look at the collision outside the shoe shop! An ambulance is taking a casualty to the hospital.
+Speaker 2 (Poppy): Oh no, ... I hope everyone is safe. By the way, ... Bobby asked us to ship this large box of cherries to Jerry's house.
+Speaker 1 (Ben): Got it. let us sip some tea first. Did you pack the pear ... and the little bear toy into the bin? ... 
+Speaker 2 (Poppy): No, ... I put them in a bag. Throw out that old pin ... and that ash from the barbecue. do not drop your cap inside the cab.
+Speaker 1 (Ben): Okay. I need to measure my feet for new casual shoes. Occasionally, ... I get a foot massage after a long walk.
+Speaker 2 (Poppy): Good idea. Show me your shoe size. Look at that larch tree on the ridges. The mountain is full of natural riches.
+Speaker 1 (Ben): Wow! Should I sew a letter H ... or a C on my jacket? ... 
+Speaker 2 (Poppy): Write H. Now, ... help me catch that cute pup. Puss! Come here, ... little doggy!
+
+

@@ -1,0 +1,392 @@
+{
+  "1": {
+    "audio_num": 1,
+    "title": "VB2_LACB_Audio 1",
+    "speaker_1": [
+      {
+        "sentence_num": 1,
+        "speaker": 1,
+        "text": "Hey Brad, are you ready to leave? Did you peel the apples and put the peel in the bin?",
+        "ipa": "/heɪ bræd, ə‿ju ˈredi tə liːv? dɪd͡ʒu piːl ðə ˈæplz ən pʊt ðə piːl ɪn ðə bɪn?/",
+        "vi": "Này Brad, cậu đã sẵn sàng đi chưa? Cậu đã gọt vỏ táo và bỏ vỏ vào thùng rác chưa?"
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 1,
+        "text": "Oh no, stop it leaking! Don't just let the dog lick it! Take a pin or a peg to fix it.",
+        "ipa": "/əʊʷnəʊ, stɒp‿ɪt ˈliːkɪŋ! dəʊnt dʒəs let ðə dɒɡ lɪk‿ɪt! teɪk‿ə pɪn ər‿ə peɡ tə fɪks‿ɪt./",
+        "vi": "Ôi không, chặn cho nó ngừng rò rỉ đi! Đừng có để con chó liếm nước chứ! Lấy cái ghim hoặc cái kẹp để cố định lại xem."
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 1,
+        "text": "Wait, do we need bread or jam?",
+        "ipa": "/weɪt, də wi niːd bred ər dʒæm?/",
+        "vi": "Chờ đã, chúng ta có cần bánh mì hay mứt không?"
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 1,
+        "text": "Got it. Should I bring a pen to write down the bill, or maybe a cheque?",
+        "ipa": "/ɡɒt‿ɪt. ʃəd‿aɪ brɪŋ‿ə pen tə‿raɪt daʊn ðə bɪl, ər ˈmeɪbiʲə tʃek?/",
+        "vi": "Rõ rồi. Tớ có nên mang theo bút để ghi lại hóa đơn, hay mang một tờ séc?"
+      },
+      {
+        "sentence_num": 5,
+        "speaker": 1,
+        "text": "Okay. By the way, where are we going to live during the trip? Near the sheep or near the big ship?",
+        "ipa": "/əʊˈkeɪ. baɪ ðə weɪ, weər‿ə wi ˈɡəʊɪŋ tə lɪv ˈdjʊərɪŋ ðə trɪp? nɪər‿ə ʃiːp ər nɪər‿ə bɪɡ ʃɪp?/",
+        "vi": "Được rồi. Nhân tiện thì chúng ta sẽ ở đâu trong chuyến đi vậy? Gần đàn cừu hay gần con tàu lớn?"
+      },
+      {
+        "sentence_num": 6,
+        "speaker": 1,
+        "text": "Awesome! Ring the bell, mark an X on the map, and let's go!",
+        "ipa": "/ˈɔːsəm! rɪŋ ðə bel, mɑːk‿ən‿eks ɒn ðə mæp, ən lets ɡəʊ!/",
+        "vi": "Tuyệt vời! Rung chuông, đánh dấu X trên bản đồ rồi xuất phát thôi!"
+      }
+    ],
+    "speaker_2": [
+      {
+        "sentence_num": 1,
+        "speaker": 2,
+        "text": "Yes, I did. But look at the sink. It's starting to leak!",
+        "ipa": "/jes, aɪ dɪd. bət lʊk‿ət ðə sɪŋk. ɪts ˈstɑːtɪŋ tə liːk!/",
+        "vi": "Tớ gọt rồi. Nhưng nhìn cái bồn rửa chén kìa. Nó bắt đầu bị rò rỉ nước rồi!"
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 2,
+        "text": "Fixed! Now, what about the food? Should I pack this tin of beans?",
+        "ipa": "/fɪkst! naʊʷ, wət‿əˈbaʊt ðə fuːd? ʃəd‿aɪ pæk ðɪs tɪn‿əv biːnz?/",
+        "vi": "Sửa xong rồi! Giờ thì đồ ăn tính sao? Tớ có nên đóng gói hộp đỗ này không?"
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 2,
+        "text": "Both! Put the bread in a pan, and throw out that old bean in the bin.",
+        "ipa": "/bəʊθ! pʊt ðə bred ɪn‿ə pæn, ən θrəʊʷaʊt ðət‿əʊld biːn ɪn ðə bɪn./",
+        "vi": "Cả hai luôn! Cho bánh mì vào chảo, rồi vứt hạt đỗ cũ kia vào thùng rác đi."
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 2,
+        "text": "Just bring a pen. Oh, and don't forget to send a message to the men at the farm.",
+        "ipa": "/dʒəs brɪŋ‿ə pen. əʊ, ən dəʊnt fəˈɡet tə send‿ə ˈmesɪdʒ tə ðə men‿ət ðə fɑːm./",
+        "vi": "Chỉ cần mang bút thôi. Ồ, và đừng quên gửi tin nhắn cho mấy người đàn ông ở trang trại nhé."
+      },
+      {
+        "sentence_num": 5,
+        "speaker": 2,
+        "text": "Near the field. We can see the cute little chicks with yellow cheeks, a little pig, and maybe even a sheep.",
+        "ipa": "/nɪə ðə fiːld. wi kən siː ðə kjuːt ˈlɪtl tʃɪks wɪð ˈjeləʊ tʃiːks, ə ˈlɪtl pɪɡ, ən ˈmeɪbiʲiːvn ə ʃiːp./",
+        "vi": "Gần cánh đồng. Chúng ta có thể ngắm những chú gà con đáng yêu với hai má vàng, một chú heo nhỏ, và có khi cả cừu nữa."
+      }
+    ]
+  },
+  "2": {
+    "audio_num": 2,
+    "title": "VB2_LACB_Audio 2",
+    "speaker_1": [
+      {
+        "sentence_num": 1,
+        "speaker": 1,
+        "text": "Hey Dawn, are you ready to pack for the trip? Remember to park the truck near the old barn, not near the small hut.",
+        "ipa": "/heɪ dɔːn, ə ju ˈredi tə pæk fər ðə trɪp? rɪˈmembə tə pɑːk ðə trʌk nɪə ðɪ‿əʊld bɑːn, nɒt nɪə ðə smɔːl hʌt./",
+        "vi": "Này Dawn, cậu đã sẵn sàng đóng gói hành lý cho chuyến đi chưa? Nhớ đỗ xe tải gần cái kho cũ, đừng đỗ gần cái túp lều nhỏ nhé."
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 1,
+        "text": "Calm down, Dawn. Keep the cat in its cot, and come check the food. We have a fresh bun, some fried carp, and a fresh cod.",
+        "ipa": "/kɑːm daʊn, dɔːn. kiːp ðə kæt ɪn ɪts kɒt, ən kʌm tʃek ðə fuːd. wi həv ə freʃ bʌn, səm fraɪd kɑːp, ən ə freʃ kɒd./",
+        "vi": "Bình tĩnh nào, Dawn. Giữ con mèo trong nôi của nó, rồi lại đây kiểm tra đồ ăn đi. Chúng ta có một chiếc bánh mì nhỏ tươi mới, một ít cá chép chiên và cá tuyết tươi."
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 1,
+        "text": "Put it in a sack, then tie it with a cord. Oh, watch out for that nasty bug on the cart!",
+        "ipa": "/pʊt‿ɪt ɪn‿ə sæk, ðen taɪ‿ɪt wɪð ə kɔːd. əʊ, wɒtʃ‿aʊt fər ðæt ˈnɑːsti bʌɡ ɒn ðə kɑːt!/",
+        "vi": "Cho nó vào bao tải đi, rồi buộc lại bằng một sợi dây thừng. Ồ, cẩn thận con bọ đáng ghét trên xe kéo kìa!"
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 1,
+        "text": "Here is your hat and your favorite cap. Drink a cup of water, turn off the tap, and put a top on the pot.",
+        "ipa": "/hɪər‿ɪz jə hæt ən jə ˈfeɪvərɪt kæp. drɪŋk‿ə kʌp əv ˈwɔːtə, tɜːn‿ɒf ðə tæp, ən pʊt‿ə tɒp ɒn ðə pɒt./",
+        "vi": "Mũ của cậu và chiếc mũ lưỡi trai yêu thích của cậu đây. Uống một cốc nước, tắt vòi nước đi và đậy nắp nồi lại nhé."
+      }
+    ],
+    "speaker_2": [
+      {
+        "sentence_num": 1,
+        "speaker": 2,
+        "text": "Got it, Don! Is there a ban on bringing animals? My cat wants to chase a fox in the park.",
+        "ipa": "/ɡɒt‿ɪt, dɒn! ɪz ðər‿ə bæn ɒn ˈbrɪŋɪŋ ˈænɪmlz? maɪ kæt wɒnts tə tʃeɪs ə fɒks ɪn ðə pɑːk./",
+        "vi": "Hiểu rồi, Don! Có lệnh cấm mang theo động vật không? Con mèo của tớ muốn đuổi bắt một con cáo trong công viên."
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 2,
+        "text": "Great! Put the cod and carp in a pot, and bring some forks. Should I put the bun into a sack or a box?",
+        "ipa": "/ɡreɪt! pʊt ðə kɒd ən kɑːp ɪn‿ə pɒt, ən brɪŋ səm fɔːks. ʃəd‿aɪ pʊt ðə bʌn ˈɪntə‿ə sæk ər‿ə bɒks?/",
+        "vi": "Tuyệt quá! Cho cá tuyết và cá chép vào một cái nồi, rồi mang theo vài cái nĩa nhé. Tớ nên bỏ bánh mì vào cái bao tải hay một chiếc hộp?"
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 2,
+        "text": "Ouch! It bit my ankle! My uncle told me to be careful. Where is my hat? It's hot weather outside.",
+        "ipa": "/aʊtʃ! ɪt bɪt maɪ ˈæŋkl! maɪ ˈʌŋkl təʊld mi tə bi ˈkeəfl. weər‿ɪz maɪ hæt? ɪts hɒt ˈweðər‿aʊtˈsaɪd./",
+        "vi": "Ái chà! Nó cắn vào cổ chân tớ rồi! Chú tớ đã dặn phải cẩn thận mà. Mũ của tớ đâu rồi? Thời tiết bên ngoài đang nóng lắm."
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 2,
+        "text": "Done! I also sent a fax to your uncle. Now, let's carry in these heavy sacks. My heart is beating fast, but I'm ready for some outdoor sport!",
+        "ipa": "/dʌn! aɪ ˈɔːlsəʊ sent‿ə fæks tə jər‿ˈʌŋkl. naʊ, lets ˈkæri‿ɪn ðiːz ˈhevi sæks.",
+        "vi": "maɪ hɑːt ɪz ˈbiːtɪŋ fɑːst, bət aɪm ˈredi fər səm ˈaʊtdɔː spɔːt!/"
+      }
+    ]
+  },
+  "3": {
+    "audio_num": 3,
+    "title": "VB2_LACB_Audio 3",
+    "speaker_1": [
+      {
+        "sentence_num": 1,
+        "speaker": 1,
+        "text": "Hey Luke, look at the garden! It's 4 o'clock and we still need to pot this plant and put it near the fern.",
+        "ipa": "/heɪ luːk, lʊk‿ət ðə ˈɡɑːdn! ɪts fɔːr‿əˈklɒk ən wi stɪl niːd tə pɒt ðɪs plɑːnt ən pʊt‿ɪt nɪə ðə fɜːn./",
+        "vi": "Này Luke, nhìn vào khu vườn kìa! Đã 4 giờ rồi và chúng ta vẫn cần trồng cây này vào chậu rồi đặt nó gần cây dương xỉ."
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 1,
+        "text": "Don't be lazy! Pull the hose near the pool. Be careful not to step on that worm near the rock or a rook might eat it.",
+        "ipa": "/dəʊnt bi ˈleɪzi! pʊl ðə həʊz nɪə ðə puːl. bi ˈkeəfl nɒt tə step ɒn ðæt wɜːm nɪə ðə rɒk ər‿ə rʊk maɪt iːt‿ɪt./",
+        "vi": "Đừng có lười thế! Kéo ống nước lại gần bể bơi đi. Cẩn thận kẻo giẫm phải con giun gần hòn đá, không thì con quạ có thể ăn mất nó đấy."
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 1,
+        "text": "It's a bird. The bird cooed nicely. It would stay if you didn't scare it. By the way, who wooed that girl sitting by the beach?",
+        "ipa": "/ɪts ə bɜːd. ðə bɜːd kuːd ˈnaɪsli. ɪt wəd steɪ ɪf ju dɪdnt skeər‿ɪt. baɪ ðə weɪ, huː wuːd ðæt ɡɜːl ˈsɪtɪŋ baɪ ðə biːtʃ?/",
+        "vi": "Đó là một con chim. Con chim gáy nghe thật êm tai. Nó sẽ ở lại nếu cậu không làm nó sợ. Nhân tiện thì, ai đã tán tỉnh cô gái đang ngồi bên bờ biển vậy?"
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 1,
+        "text": "Right. Help me take this box of books inside. Make sure to lock the door so no one will look inside.",
+        "ipa": "/raɪt. help mi teɪk ðɪs bɒks əv bʊks ɪnˈsaɪd. meɪk ʃʊə tə lɒk ðə dɔː səʊ nəʊ wʌn wɪl lʊk‿ɪnˈsaɪd./",
+        "vi": "Đúng rồi. Giúp tớ mang thùng sách này vào trong đi. Nhớ khóa cửa chắc chắn để không ai ngó nhìn vào bên trong."
+      },
+      {
+        "sentence_num": 5,
+        "speaker": 1,
+        "text": "Haha! Taking a walk with a fast walker like you is fun, even if you are a slow worker. Eat a bun and let's go!",
+        "ipa": "/hɑːˈhɑː! ˈteɪkɪŋ ə wɔːk wɪð ə fɑːst ˈwɔːkə laɪk ju ɪz fʌn, ˈiːvn ɪf ju ər‿ə sləʊ ˈwɜːkə. iːt‿ə bʌn ən lets ɡəʊ!/",
+        "vi": "Haha! Đi dạo với một người đi nhanh như cậu thật vui, cho dù cậu là một người làm việc chậm chạp. Ăn một chiếc bánh mì rồi xuất phát thôi!"
+      }
+    ],
+    "speaker_2": [
+      {
+        "sentence_num": 1,
+        "speaker": 2,
+        "text": "I could help, but I'm full! That warm soup with the cod was delicious. I'm no fool to work on a full stomach.",
+        "ipa": "/aɪ kəd help, bət aɪm fʊl! ðæt wɔːm suːp wɪð ðə kɒd wəz dɪˈlɪʃəs. aɪm nəʊ fuːl tə wɜːk ɒn‿ə fʊl ˈstʌmək./",
+        "vi": "Tớ có thể giúp, nhưng tớ no quá! Món súp nóng với cá tuyết đó ngon tuyệt. Tớ đâu có ngốc mà đi làm việc với cái bụng no căng chứ."
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 2,
+        "text": "Okay, okay. Wait, look at the bed of flowers. Is that a bud or a colorful bird?",
+        "ipa": "/əʊˈkeɪ, əʊˈkeɪ. weɪt, lʊk‿ət ðə bed əv ˈflaʊəz. ɪz ðæt ə bʌd ər‿ə ˈkʌləfl bɜːd?/",
+        "vi": "Được rồi, được rồi. Chờ đã, nhìn vào luống hoa kìa. Đó là một cái nụ hoa hay là một con chim nhiều màu sắc vậy?"
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 2,
+        "text": "That's my sister. She's wearing fur coat because of the cold west wind. But today is the worst wind ever. It made a gull fly away.",
+        "ipa": "/ðæts maɪ ˈsɪstə. ʃiːz ˈweərɪŋ fɜː kəʊt bɪˈkəz əv ðə kəʊld west wɪnd. bət təˈdeɪ ɪz ðə wɜːst wɪnd ˈevə. ɪt meɪd ə ɡʌl flaɪ əˈweɪ./",
+        "vi": "Đó là chị gái tớ. Chị ấy đang mặc áo lông vì cơn gió tây lạnh giá. Nhưng hôm nay là ngày gió tồi tệ nhất từ trước đến nay. Nó đã làm một con hải âu bay đi mất."
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 2,
+        "text": "Don't worry, I won't turn the wrong way. The sign says \"turn\", not \"ten\". Let's hurry or the sun will burn us.",
+        "ipa": "/dəʊnt ˈwʌri, aɪ wəʊnt tɜːn ðə rɒŋ weɪ. ðə saɪn sez \"tɜːn\", nɒt \"ten\". lets ˈhʌri ər ðə sʌn wɪl bɜːn‿ʌs./",
+        "vi": "Đừng lo, tớ sẽ không rẽ sai hướng đâu. Biển báo ghi là \"turn\" chứ không phải \"ten\". Nhanh lên nào kẻo mặt trời thiêu đốt chúng ta mất."
+      }
+    ]
+  },
+  "4": {
+    "audio_num": 4,
+    "title": "VB2_LACB_Audio 4",
+    "speaker_1": [
+      {
+        "sentence_num": 1,
+        "speaker": 1,
+        "text": "Hey Jane, take a look at the boat! Did you put the fresh pie and the pear into the bowl?",
+        "ipa": "/heɪ dʒeɪn, teɪk‿ə lʊk‿ət ðə bəʊt! dɪd‿ju pʊt ðə freʃ paɪ ən ðə peə r‿ˈɪntə ðə bəʊl?/",
+        "vi": "Này Jane, nhìn vào con thuyền kìa! Cậu đã bỏ bánh pie tươi và quả lê vào bát chưa?"
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 1,
+        "text": "Don't worry. Ouch! A sharp bone in this chicken hit my brow.",
+        "ipa": "/dəʊnt ˈwʌri. aʊtʃ! ə ʃɑːp bəʊn ɪn ðɪs ˈtʃɪkɪn hɪt maɪ braʊ./",
+        "vi": "Đừng lo. Ái chà! Một cái xương sắc trong miếng gà này chọc vào lông mày của tớ rồi."
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 1,
+        "text": "I'm fine. Look, there's a big cow standing in the shade near the wooden chairs. What an odd age we live in.",
+        "ipa": "/aɪm faɪn. lʊk, ðəz ə bɪɡ kaʊ ˈstændɪŋ ɪn ðə ʃeɪd nɪə ðə ˈwʊdn tʃeəz. wɒt ən‿ɒd‿eɪdʒ wi lɪv ɪn./",
+        "vi": "Tớ không sao. Nhìn kìa, có một con bò lớn đang đứng trong bóng râm gần mấy chiếc ghế gỗ. Thật là một thời đại kỳ lạ chúng ta đang sống."
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 1,
+        "text": "Nice! Let's sit by the pier, drink a cold beer, and take a taste of the pie.",
+        "ipa": "/naɪs! lets sɪt baɪ ðə pɪə, drɪŋk‿ə kəʊld bɪə, ən teɪk‿ə teɪst əv ðə paɪ./",
+        "vi": "Tuyệt quá! Chúng ta hãy ngồi ở bến tàu, uống một ly bia lạnh và nếm thử món bánh pie đi."
+      },
+      {
+        "sentence_num": 5,
+        "speaker": 1,
+        "text": "Wow, I see a golden coin on that board! Should I bow down to pick it up?",
+        "ipa": "/waʊ, aɪ siː ə ˈɡəʊldən kɔɪn ɒn ðæt bɔːd! ʃəd‿aɪ baʊ daʊn tə pɪk‿ɪt‿ʌp?/",
+        "vi": "Chà, tớ thấy một đồng xu vàng trên tấm ván đó! Tớ có nên cúi xuống để nhặt nó lên không?"
+      },
+      {
+        "sentence_num": 6,
+        "speaker": 1,
+        "text": "Don't worry, I won't lose a single tear. Pass me that paper to wrap the food, and let's ride my bike home after this.",
+        "ipa": "/dəʊnt ˈwʌri, aɪ wəʊnt luːz ə ˈsɪŋɡl tɪə. pɑːs mi ðæt ˈpeɪpə tə ræp ðə fuːd, ən lets raɪd maɪ baɪk həʊm ˈɑːftə ðɪs./",
+        "vi": "Đừng lo, tớ sẽ không rơi một giọt nước mắt nào đâu. Đưa tớ tờ giấy đó để gói đồ ăn lại, rồi sau đó cùng đạp xe về nhà thôi."
+      }
+    ],
+    "speaker_2": [
+      {
+        "sentence_num": 1,
+        "speaker": 2,
+        "text": "Yes, Roy, but wait, don't drop that hot oil! It can boil quickly and cause a terrible pain.",
+        "ipa": "/jes, rɔɪ, bət weɪt, dəʊnt drɒp ðæt hɒt‿ɔɪl! ɪt kən bɔɪl ˈkwɪkli ən kɔːz ə ˈterəbl peɪn./",
+        "vi": "Tớ bỏ rồi, Roy, nhưng chờ đã, đừng làm rớt chỗ dầu nóng đó! Nó có thể sôi rất nhanh và gây ra vết đau khủng khiếp đấy."
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 2,
+        "text": "Oh, let me check. Keep your eye open. Thank goodness, it didn't hit your ear or your beard.",
+        "ipa": "/əʊ, let mi tʃek. kiːp jər‿aɪ ˈəʊpən. θæŋk ˈɡʊdnəs, ɪt dɪdnt hɪt jər‿ɪə r‿ər jə bɪəd./",
+        "vi": "Ôi, để tớ kiểm tra xem. Mở mắt ra nào. Mới ơn trời, nó không chọc vào tai hay chòm râu của cậu."
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 2,
+        "text": "Haha! Take a note of this: I woke up early to buy this toy kite for my nephew. Check its height when it flies!",
+        "ipa": "/hɑːˈhɑː! teɪk‿ə nəʊt əv ðɪs: aɪ wəʊk‿ʌp ˈɜːli tə baɪ ðɪs tɔɪ kaɪt fə maɪ ˈnevjuː. tʃek ɪts haɪt wen ɪt flaɪz!/",
+        "vi": "Haha! Ghi nhớ điều này nhé: Tớ đã dậy sớm để mua chiếc diều đồ chơi này cho cháu trai tớ đấy. Hãy xem chiều cao của nó khi bay lên kìa!"
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 2,
+        "text": "Good idea. The ocean air is so fresh! Watch that wooden board float near the pier.",
+        "ipa": "/ɡʊd aɪˈdɪə. ðɪ‿ˈəʊʃn eə r‿ɪz səʊ freʃ! wɒtʃ ðæt ˈwʊdn bɔːd fləʊt nɪə ðə pɪə./",
+        "vi": "Ý kiến hay đấy. Không khí đại dương thật là trong lành! Hãy nhìn tấm ván gỗ đang nổi gần bến tàu kìa."
+      },
+      {
+        "sentence_num": 5,
+        "speaker": 2,
+        "text": "Be careful, or you'll tear your new coat! Don't grouse if you drop your phone into the water.",
+        "ipa": "/bi ˈkeəfl, ər juːl teə jə njuː kəʊt! dəʊnt ɡraʊs ɪf ju drɒp jə fəʊn ˈɪntə ðə ˈwɔːtə./",
+        "vi": "Cẩn thận đấy, không thì cậu sẽ làm xé rách chiếc áo khoác mới mất! Đừng cằn nhằn nếu cậu làm rơi điện thoại xuống nước nhé."
+      },
+      {
+        "sentence_num": 6,
+        "speaker": 2,
+        "text": "Great! Look, that fluffy bear toy on the boat has funny hair. Let's go, Joe is waiting for us.",
+        "ipa": "/ɡreɪt! lʊk, ðæt ˈflʌfi beə tɔɪ ɒn ðə bəʊt həz ˈfʌni heə. lets ɡəʊ, dʒəʊ ɪz ˈweɪtɪŋ fər‿ʌs./",
+        "vi": "Tuyệt vời! Nhìn kìa, con gấu bông xù trên thuyền có bộ lông hài hước thật. Đi thôi nào, Joe đang chờ chúng ta đấy."
+      }
+    ]
+  },
+  "5": {
+    "audio_num": 5,
+    "title": "VB2_LACB_Audio 5",
+    "speaker_1": [
+      {
+        "sentence_num": 1,
+        "speaker": 1,
+        "text": "Hey Poppy, did you get a pen to write your age and name on this card?",
+        "ipa": "/heɪ ˈpɒpi, dɪd‿ju ɡet‿ə pen tə raɪt jər‿eɪdʒ ən neɪm ɒn ðɪs kɑːd?/",
+        "vi": "Này Poppy, cậu đã lấy bút để ghi tuổi và tên của cậu lên tấm thiệp này chưa?"
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 1,
+        "text": "Are you choking or joking? Wow, look at the collision outside the shoe shop! An ambulance is taking a casualty to the hospital.",
+        "ipa": "/ə ju ˈtʃəʊkɪŋ ər ˈdʒəʊkɪŋ? waʊ, lʊk‿ət ðə kəˈlɪʒn ˌaʊtˈsaɪd ðə ʃuː ʃɒp! ən ˈæmbjələns ɪz ˈteɪkɪŋ ə ˈkæʒuəlti tə ðə ˈhɒspɪtl./",
+        "vi": "Cậu đang nghẹn hay đang nói đùa vậy? Chà, nhìn vụ va chạm bên ngoài cửa hàng giày kìa! Một chiếc xe cấp cứu đang đưa nạn nhân đến bệnh viện."
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 1,
+        "text": "Got it. Let's sip some tea first. Did you pack the pear and the little bear toy into the bin?",
+        "ipa": "/ɡɒt‿ɪt. lets sɪp səm tiː fɜːst. dɪd‿ju pæk ðə peə r‿ən ðə ˈlɪtl beə tɔɪ ˈɪntə ðə bɪn?/",
+        "vi": "Hiểu rồi. Chúng ta hãy nhấp một ít trà trước đã. Cậu đã đóng gói quả lê và con gấu bông nhỏ vào thùng chưa?"
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 1,
+        "text": "Okay. I need to measure my feet for new casual shoes. Occasionally, I get a foot massage after a long walk.",
+        "ipa": "/əʊˈkeɪ. aɪ niːd tə ˈmeʒə maɪ fiːt fə njuː ˈkæʒuəl ʃuːz. əˈkeɪʒnəli, aɪ ɡet‿ə fʊt ˈmæsɑːʒ ˈɑːftər‿ə lɒŋ wɔːk./",
+        "vi": "Được rồi. Tớ cần đo chân để mua giày thường ngày mới. Đôi khi, tớ đi mát-xa chân sau khi đi bộ đường dài."
+      },
+      {
+        "sentence_num": 5,
+        "speaker": 1,
+        "text": "Wow! Should I sew a letter H or a C on my jacket?",
+        "ipa": "/waʊ! ʃəd‿aɪ səʊ ə ˈletər‿eɪtʃ ər‿ə siː ɒn maɪ ˈdʒækɪt?/",
+        "vi": "Chà! Tớ nên thêu chữ H hay chữ C lên áo khoác của tớ đây?"
+      }
+    ],
+    "speaker_2": [
+      {
+        "sentence_num": 1,
+        "speaker": 2,
+        "text": "Yes, Ben, but wait! Look at Sue! She is trying to push that cheap green Jeep near the pub.",
+        "ipa": "/jes, ben, bət weɪt! lʊk‿ət suː! ʃi ɪz ˈtraɪɪŋ tə pʊʃ ðæt tʃiːp ɡriːn dʒiːp nɪə ðə pʌb./",
+        "vi": "Tớ lấy rồi, Ben, nhưng chờ đã! Nhìn Sue kìa! Cô ấy đang cố gắng đẩy chiếc xe Jeep màu xanh lá giá rẻ gần quán rượu."
+      },
+      {
+        "sentence_num": 2,
+        "speaker": 2,
+        "text": "Oh no, I hope everyone is safe. By the way, Bobby asked us to ship this large box of cherries to Jerry's house.",
+        "ipa": "/əʊ nəʊ, aɪ həʊp ˈevriwʌn ɪz seɪf. baɪ ðə weɪ, ˈbɒbi ɑːskt‿ʌs tə ʃɪp ðɪs lɑːdʒ bɒks əv ˈtʃeriz tə ˈdʒeriz haʊs./",
+        "vi": "Ôi không, tớ hy vọng mọi người đều an toàn. Nhân tiện thì, Bobby đã nhờ chúng ta vận chuyển hộp anh đào lớn này đến nhà của Jerry."
+      },
+      {
+        "sentence_num": 3,
+        "speaker": 2,
+        "text": "No, I put them in a bag. Throw out that old pin and that ash from the barbecue. Don't drop your cap inside the cab.",
+        "ipa": "/nəʊ, aɪ pʊt ðəm ɪn‿ə bæɡ. θrəʊʷaʊt ðæt əʊld pɪn ən ðæt æʃ frəm ðə ˈbɑːbɪkjuː. dəʊnt drɒp jə kæp ɪnˈsaɪd ðə kæb./",
+        "vi": "Chưa, tớ đã cho chúng vào một chiếc túi. Vứt cái ghim cũ đó và tro từ bếp nướng đi. Đừng làm rơi chiếc mũ lưỡi trai của cậu bên trong xe taxi nhé."
+      },
+      {
+        "sentence_num": 4,
+        "speaker": 2,
+        "text": "Good idea. Show me your shoe size. Look at that larch tree on the ridges. The mountain is full of natural riches.",
+        "ipa": "/ɡʊd aɪˈdɪə. ʃəʊ mi jə ʃuː saɪz. lʊk‿ət ðæt lɑːtʃ triː ɒn ðə ˈrɪdʒɪz. ðə ˈmaʊntən ɪz fʊl əv ˈnætʃrəl ˈrɪtʃɪz./",
+        "vi": "Ý hay đấy. Cho tớ xem cỡ giày của cậu đi. Nhìn cây thông rụng lá trên các gờ núi kìa. Ngọn núi chứa đầy những tài nguyên thiên nhiên phong phú."
+      },
+      {
+        "sentence_num": 5,
+        "speaker": 2,
+        "text": "Write H. Now, help me catch that cute pup. Puss! Come here, little doggy!",
+        "ipa": "/raɪt eɪtʃ. naʊ, help mi kætʃ ðæt kjuːt pʌp. pʊs! kʌm hɪə, ˈlɪtl ˈdɒɡi!/",
+        "vi": "Viết chữ H đi. Giờ thì giúp tớ bắt chú chó con đáng yêu đó với. Miu miu! Lại đây nào, chú chó nhỏ!"
+      }
+    ]
+  }
+}

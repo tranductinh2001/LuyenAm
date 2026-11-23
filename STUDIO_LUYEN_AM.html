@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bit1 AI Voice Studio - Cắt Ghép Từng Câu & Đánh Giá Phát Âm (Beeknoee AI / Local)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .recording-pulse {
+      animation: pulse-red 1.2s infinite;
+    }
+    @keyframes pulse-red {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.03); }
+    }
+    .word-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin: 0.15rem;
+      transition: all 0.2s ease;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-3 md:p-6">
+  <div class="max-w-6xl mx-auto space-y-5">
+    
+    <!-- Top Header -->
+    <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1.5 flex-wrap">
+          <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+            Bit1 AI Studio • VB2 Ngôn Ngữ Anh
+          </span>
+          <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+            Cổng 5180 (Độc Lập)
+          </span>
+          <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center gap-1 cursor-pointer" onclick="toggleBeeModal()">
+            <span>🤖</span> Beeknoee AI + Local Dual-Engine
+          </span>
+        </div>
+        <h1 class="text-xl md:text-2xl font-black text-white flex items-center gap-2">
+          Bit1 Voice Studio – Thu Âm Từng Câu & Đánh Giá Phát Âm AI
+        </h1>
+        <p class="text-xs text-slate-300 mt-0.5">
+          Lấy giọng thật từng câu, đánh giá phát âm AI chấm điểm liền tay, đối chiếu cặp âm tối thiểu và tự động ghép thành file MP3 hoàn chỉnh nộp cô giáo!
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="toggleBeeModal()" class="bg-slate-900 hover:bg-slate-800 border border-indigo-500/40 rounded-xl px-3.5 py-2 text-xs flex items-center gap-2 transition-all">
+          <span class="text-indigo-400 font-bold">⚙️ Cấu Hình Beeknoee AI</span>
+        </button>
+
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl px-3.5 py-2 text-xs flex items-center gap-2.5">
+          <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+          <div>
+            <div class="text-slate-400 text-[10px]">Cổng server:</div>
+            <div class="text-indigo-400 font-mono font-bold">localhost:5180</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Modal Cấu hình Beeknoee AI Gateway -->
+    <div id="bee-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-slate-900 border border-indigo-500/50 rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-2xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <span>🤖</span> Cấu Hình Beeknoee AI Gateway (OpenAI Compatible)
+          </h3>
+          <button onclick="toggleBeeModal()" class="text-slate-400 hover:text-white font-bold text-base">&times;</button>
+        </div>
+
+        <div class="text-xs text-slate-300 space-y-2">
+          <p>
+            Hệ thống tích hợp chuẩn **Beeknoee AI Platform** cho âm thanh và giọng nói:
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-400">
+            <li><strong>Speech-to-Text:</strong> <code class="text-emerald-400">whisper-large-v3-turbo</code> qua endpoint <code class="text-indigo-300">/audio/transcriptions</code></li>
+            <li><strong>Đánh giá âm vị:</strong> <code class="text-emerald-400">google/gemini-3.1-flash-lite</code> qua <code class="text-indigo-300">/chat/completions</code></li>
+            <li><strong>Dự phòng tự động:</strong> Khi tài khoản hết số dư (HTTP 402) hoặc offline, hệ thống tự động chuyển sang <strong>Local Phonetic AI Engine</strong> chạy 100% mượt mà!</li>
+          </ul>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs text-slate-300 font-bold block">Beeknoee API Key:</label>
+          <input type="password" id="input-bee-key" value="sk-bee-9a4e3ae0de60aaab4298ad268bf3a66ef42e5e59ac4ccd7506750d71d80622ae" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-indigo-300 font-mono">
+          <div class="flex items-center justify-between text-[11px] text-slate-400">
+            <span>Base URL: <code class="text-indigo-400">https://platform.beeknoee.com/api/v1</code></span>
+            <a href="https://platform.beeknoee.com/billing" target="_blank" class="text-amber-400 hover:underline font-bold">
+              💳 Nạp số dư tài khoản &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button onclick="saveBeeKey()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors">
+            Lưu & Áp Dụng
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
+      <button onclick="switchMainTab('recorder')" id="nav-recorder" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-1.5">
+        <span>🎙️</span> 1. Thu Âm Từng Câu & Đánh Giá AI (Giọng Thật Bạn)
+      </button>
+      <button onclick="switchMainTab('assignments')" id="nav-assignments" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all flex items-center gap-1.5">
+        <span>🎯</span> 2. Bài Nộp Có Sẵn 5 Audio (LACB)
+      </button>
+      <button onclick="switchMainTab('generator')" id="nav-generator" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all flex items-center gap-1.5">
+        <span>✨</span> 3. Sinh Giọng Prompt Tùy Ý
+      </button>
+      <button onclick="switchMainTab('tts')" id="nav-tts" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all flex items-center gap-1.5">
+        <span>🗣️</span> 4. Text to Speech Tự Do
+      </button>
+      <button onclick="switchMainTab('stt')" id="nav-stt" class="px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all flex items-center gap-1.5">
+        <span>📝</span> 5. Nhận Diện & Đọc Thử Mic (STT)
+      </button>
+    </div>
+
+    <!-- TAB 1: PHÒNG THU ÂM TỪNG CÂU & ĐÁNH GIÁ LIỀN TAY (CORE USER REQUEST) -->
+    <section id="tab-recorder-section" class="space-y-4">
+      
+      <!-- Top Instruction Card -->
+      <div class="bg-gradient-to-r from-indigo-950/60 to-purple-950/60 border border-indigo-500/30 rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="text-sm font-bold text-white flex items-center gap-2">
+            <span>💡</span> Hướng dẫn: Thu âm từng câu & Nhận đánh giá âm vị AI ngay lập tức
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            1. Chọn <strong>Audio 1 → 5</strong> và chọn vai bạn đóng (<strong>Speaker 1</strong> hoặc <strong>Speaker 2</strong>).<br>
+            2. Bấm <strong>"Nghe mẫu AI"</strong> để bắt chước ngữ điệu $\rightarrow$ bấm <strong>"Bắt đầu thu"</strong> đọc câu đó.<br>
+            3. Thu xong hệ thống sẽ <strong>đánh giá phát âm liền luôn</strong> (chấm điểm, chỉ rõ từ nào đọc đúng/sai, đối chiếu cặp âm tối thiểu).<br>
+            4. Đọc câu nào chưa ưng ý chỉ cần bấm <strong>"Thu lại câu này"</strong>. Khi hoàn tất, bấm nút xanh ở đáy để ghép thành file MP3 nộp bài!
+          </p>
+        </div>
+        <div class="shrink-0 flex items-center gap-3">
+          <div class="bg-slate-900/90 border border-slate-700/80 p-3 rounded-xl text-center">
+            <div class="text-[10px] text-slate-400 uppercase font-bold">Tiến độ bài thu</div>
+            <div id="recorder-progress-text" class="text-lg font-black text-emerald-400 mt-0.5">0 / 6 câu</div>
+            <div class="w-28 bg-slate-800 rounded-full h-1.5 mt-1.5 overflow-hidden">
+              <div id="recorder-progress-bar" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audio Selector for Recorder -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+        <button onclick="selectRecorderAudio(1)" id="rec-audio-btn-1" class="rec-tab p-3 rounded-xl text-left border bg-indigo-900/70 border-indigo-500 text-white font-bold transition-all shadow-md">
+          <div class="text-[10px] text-indigo-300 uppercase">Audio 1</div>
+          <div class="text-xs truncate">/iː/ - /ɪ/ & /e/ - /æ/</div>
+        </button>
+        <button onclick="selectRecorderAudio(2)" id="rec-audio-btn-2" class="rec-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700">
+          <div class="text-[10px] text-indigo-400 uppercase">Audio 2</div>
+          <div class="text-xs truncate">/ɑː/ - /ʌ/ & /ɒ/ - /ɔː/</div>
+        </button>
+        <button onclick="selectRecorderAudio(3)" id="rec-audio-btn-3" class="rec-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700">
+          <div class="text-[10px] text-indigo-400 uppercase">Audio 3</div>
+          <div class="text-xs truncate">/uː/ - /ʊ/ & /ɜː/ - /ə/</div>
+        </button>
+        <button onclick="selectRecorderAudio(4)" id="rec-audio-btn-4" class="rec-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700">
+          <div class="text-[10px] text-indigo-400 uppercase">Audio 4</div>
+          <div class="text-xs truncate">Nguyên âm đôi Diphthongs</div>
+        </button>
+        <button onclick="selectRecorderAudio(5)" id="rec-audio-btn-5" class="rec-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700">
+          <div class="text-[10px] text-indigo-400 uppercase">Audio 5</div>
+          <div class="text-xs truncate">Các cặp phụ âm</div>
+        </button>
+      </div>
+
+      <!-- Role Selector and Auto-eval Toggle -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 border border-slate-800 p-3.5 rounded-xl">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xs text-slate-300 font-bold">Chọn vai thu âm:</span>
+          <button onclick="selectRecorderSpeaker(1)" id="role-btn-spk1" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow transition-all">
+            👤 Speaker 1 (Vai chính)
+          </button>
+          <button onclick="selectRecorderSpeaker(2)" id="role-btn-spk2" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:text-white transition-all">
+            👥 Speaker 2 (Vai đối thoại)
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3 text-xs">
+          <label class="flex items-center gap-2 text-emerald-300 font-bold cursor-pointer">
+            <input type="checkbox" id="chk-auto-evaluate" checked class="w-4 h-4 rounded text-emerald-600 focus:ring-0">
+            <span>⚡ Tự động đánh giá phát âm liền khi dừng thu</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Sentences List Container -->
+      <div id="recorder-sentences-container" class="space-y-4">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Splicing & Concatenation Control Bar -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950/70 to-slate-900 border-2 border-indigo-500/50 rounded-2xl p-5 shadow-2xl space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <span>✂️</span> Ghép Toàn Bộ Lời Nói Thành File MP3 Hoàn Chỉnh
+            </h3>
+            <p class="text-xs text-slate-300 mt-0.5">
+              Hệ thống tự động nối các câu bạn đã thu âm lại với nhau, chèn khoảng nghỉ tự nhiên (350ms) giữa các câu.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-4 text-xs">
+            <label class="flex items-center gap-2 text-slate-300 cursor-pointer">
+              <input type="checkbox" id="chk-auto-fallback" checked class="w-4 h-4 rounded text-indigo-600 focus:ring-0">
+              <span>Tự bù câu chưa thu bằng giọng mẫu AI</span>
+            </label>
+            <div class="flex items-center gap-1.5">
+              <span class="text-slate-400">Khoảng nghỉ:</span>
+              <select id="sel-silence-ms" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-slate-200">
+                <option value="250">250ms (Nhanh)</option>
+                <option value="350" selected>350ms (Tự nhiên nhất)</option>
+                <option value="500">500ms (Chậm rãi)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="mergeAllSentences()" id="btn-merge-all" class="w-full bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500 text-white font-extrabold py-3.5 px-6 rounded-xl text-sm flex items-center justify-center gap-2 shadow-xl shadow-emerald-900/30 transition-all cursor-pointer">
+          <span>✨</span> BẤM VÀO ĐÂY ĐỂ GHÉP THÀNH BÀI NỘP HOÀN CHỈNH (.MP3)
+        </button>
+
+        <!-- Merged Audio Result Card -->
+        <div id="merged-result-card" class="hidden bg-slate-950 p-5 rounded-xl border border-emerald-500/50 space-y-4 shadow-lg">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-sm font-bold text-emerald-300" id="merged-title-text">
+                🎉 Đã Ghép Thành Công Bài Nộp!
+              </span>
+            </div>
+            <a id="merged-download-btn" href="#" download class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-md">
+              📥 Tải File MP3 Nộp Cho Cô
+            </a>
+          </div>
+
+          <audio id="merged-audio-player" controls class="w-full"></audio>
+
+          <div class="text-[11px] text-slate-400 flex items-center justify-between">
+            <span id="merged-status-details">File đã sẵn sàng trong thư mục BAI_NOP_HOAN_CHINH</span>
+            <span class="text-emerald-400 font-mono font-bold">Chất lượng: MP3 192kbps Broadcast</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TAB 2: 5 AUDIO ASSIGNMENTS (READY-MADE REFERENCE) -->
+    <section id="tab-assignments-section" class="hidden space-y-4">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+        <button onclick="loadAudioAssignment(1)" id="audio-btn-1" class="audio-tab p-3 rounded-xl text-left border bg-indigo-900/70 border-indigo-500 text-white font-bold transition-all shadow-md">
+          <div class="text-[10px] text-indigo-300 uppercase">Audio 1</div>
+          <div class="text-xs truncate">/iː/ - /ɪ/ & /e/ - /æ/</div>
+        </button>
+        <button onclick="loadAudioAssignment(2)" id="audio-btn-2" class="audio-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700">
+          <div class="text-[10px] text-indigo-400 uppercase">Audio 2</div>
+          <div class="text-xs truncate">/ɑː/ - /ʌ/ & /ɒ/ - /ɔː/</div>
+        </button>
+        <button onclick="loadAudioAssignment(3)" id="audio-btn-3" class="audio-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700">
+          <div class="text-[10px] text-indigo-400 uppercase">Audio 3</div>
+          <div class="text-xs truncate">/uː/ - /ʊ/ & /ɜː/ - /ə/</div>
+        </button>
+        <button onclick="loadAudioAssignment(4)" id="audio-btn-4" class="audio-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700">
+          <div class="text-[10px] text-indigo-400 uppercase">Audio 4</div>
+          <div class="text-xs truncate">Nguyên âm đôi Diphthongs</div>
+        </button>
+        <button onclick="loadAudioAssignment(5)" id="audio-btn-5" class="audio-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700">
+          <div class="text-[10px] text-indigo-400 uppercase">Audio 5</div>
+          <div class="text-xs truncate">Các cặp phụ âm</div>
+        </button>
+      </div>
+
+      <div id="assignment-detail-card" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- TAB 3: PROMPT-DRIVEN CUSTOM VOICE GENERATOR -->
+    <section id="tab-generator-section" class="hidden space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <h2 class="text-base font-bold text-white flex items-center gap-2">
+          <span>✨</span> Trình Sinh Giọng Đọc Tiếng Anh Theo Prompt Điều Chỉnh Độ Sai / Tự Nhiên
+        </h2>
+        <p class="text-xs text-slate-400">
+          Nhập văn bản và gõ câu lệnh prompt mô tả phong cách đọc (đọc chậm, ngắt nghỉ tự nhiên, hơi ngập ngừng...).
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="text-xs text-slate-300 font-bold block mb-1">Chọn giọng AI đàm thoại:</label>
+            <select id="gen-voice" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-emerald-300 font-bold">
+              <option value="en-US-BrianMultilingualNeural">Brian (US Nam - Tự nhiên nhất, ấm áp, đàm thoại)</option>
+              <option value="en-US-AvaMultilingualNeural">Ava (US Nữ - Trong trẻo, biểu cảm tự nhiên)</option>
+              <option value="en-GB-RyanNeural">Ryan (UK Nam - Chuẩn giọng Anh BBC thanh lịch)</option>
+              <option value="en-US-EmmaNeural">Emma (US Nữ - Nhẹ nhàng, tự nhiên)</option>
+              <option value="en-US-ChristopherNeural">Christopher (US Nam - Thân thiện)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-slate-300 font-bold block mb-1">Mức độ phát âm học viên:</label>
+            <select id="gen-level" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-amber-300 font-bold">
+              <option value="82">82% (Tự nhiên nhất • Khuyên dùng nộp bài)</option>
+              <option value="75">75% (Học viên mới • Đọc chậm rãi, ngắt rõ từng từ)</option>
+              <option value="88">88% (Học viên khá • Nhịp đều, phát âm chuẩn)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-300 font-bold block mb-1">Prompt điều chỉnh khuyết điểm học viên:</label>
+          <input type="text" id="gen-prompt" value="Đọc chậm rãi, ngắt nghỉ tự nhiên, không nuốt âm Tây" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
+          <div class="flex flex-wrap gap-1.5 mt-2">
+            <button onclick="setGenPrompt('Đọc chậm, không lướt âm')" class="text-[10px] bg-slate-950 hover:bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-800">+ Đọc chậm, không lướt âm</button>
+            <button onclick="setGenPrompt('Hơi ngập ngừng nhẹ ở dấu phẩy')" class="text-[10px] bg-slate-950 hover:bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-800">+ Hơi ngập ngừng nhẹ ở dấu phẩy</button>
+            <button onclick="setGenPrompt('Phát âm rõ từng từ kiểu Việt Nam')" class="text-[10px] bg-slate-950 hover:bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-800">+ Phát âm rõ từng từ kiểu Việt Nam</button>
+            <button onclick="setGenPrompt('Tách từ viết tắt, nhịp phẳng tự nhiên')" class="text-[10px] bg-slate-950 hover:bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-800">+ Tách từ viết tắt, nhịp phẳng tự nhiên</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-xs text-slate-300 font-bold block mb-1">Nội dung văn bản tiếng Anh:</label>
+          <textarea id="gen-text" rows="4" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-xs sm:text-sm font-mono text-slate-200">Hey Brad! Are you ready to leave? Did you peel the apples and put the peel in the bin? Oh no, stop it leaking! Do not just let the dog lick it! Take a pin or a peg to fix it.</textarea>
+        </div>
+
+        <button onclick="generateCustomPromptAudio()" id="btn-gen-audio" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/25 transition-all">
+          <span>✨</span> Sinh Giọng Đọc Theo Prompt Này
+        </button>
+
+        <div id="gen-result-card" class="hidden bg-slate-950 p-4 rounded-xl border border-emerald-500/40 space-y-3">
+          <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+            <span>🎉</span> Đã sinh file âm thanh thành công:
+          </div>
+          <audio id="gen-audio-player" controls class="w-full"></audio>
+          <a id="gen-download-btn" href="#" download="Custom_Voice_Output.mp3" class="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 font-bold">
+            📥 Tải file MP3 này về máy
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: FREE TEXT TO SPEECH -->
+    <section id="tab-tts-section" class="hidden space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4 max-w-3xl mx-auto">
+        <h2 class="text-base font-bold text-white">🗣️ Text to Speech Tự Do</h2>
+        <p class="text-xs text-slate-400">Nhập bất kỳ câu tiếng Anh nào để AI đọc chuẩn tự nhiên.</p>
+
+        <div>
+          <label class="text-xs text-slate-300 block mb-1">Câu tiếng Anh:</label>
+          <textarea id="tts-free-text" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-sm text-slate-200">The weather is lovely today. Let's take a walk by the lake!</textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs text-slate-400 block mb-1">Giọng đọc:</label>
+            <select id="tts-free-voice" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+              <option value="en-US-BrianMultilingualNeural">Brian (US Nam - Tự nhiên, ấm)</option>
+              <option value="en-US-AvaMultilingualNeural">Ava (US Nữ - Trong trẻo)</option>
+              <option value="en-GB-RyanNeural">Ryan (UK Nam - Chuẩn BBC)</option>
+              <option value="en-US-EmmaNeural">Emma (US Nữ - Dịu dàng)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-slate-400 block mb-1">Tốc độ:</label>
+            <select id="tts-free-rate" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200">
+              <option value="-4%">Vừa phải (0.95x - Khuyên dùng)</option>
+              <option value="-8%">Chậm rãi (0.90x)</option>
+              <option value="+0%">Tốc độ chuẩn (1.0x)</option>
+            </select>
+          </div>
+        </div>
+
+        <button onclick="generateFreeTts()" id="btn-free-tts" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-colors">
+          Sinh Giọng Đọc Ngay
+        </button>
+
+        <div id="free-tts-result" class="hidden bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+          <div class="text-xs text-slate-300 font-bold">Kết quả phát âm:</div>
+          <audio id="free-tts-audio" controls class="w-full"></audio>
+          <a id="free-tts-download" href="#" download="TTS_Output.mp3" class="inline-block text-xs text-indigo-400 font-bold">📥 Tải MP3</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: SPEECH TO TEXT & MIC PRACTICE -->
+    <section id="tab-stt-section" class="hidden space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl max-w-2xl mx-auto space-y-5 text-center">
+        <h2 class="text-base font-bold text-white">📝 Thu Âm & Nhận Diện Giọng Đọc Trực Tiếp (STT)</h2>
+        <p class="text-xs text-slate-400">Nói tiếng Anh vào micro máy tính để kiểm tra xem hệ thống có nhận diện đúng từ bạn đọc hay không.</p>
+
+        <div class="py-6 flex flex-col items-center justify-center">
+          <button onclick="toggleMicrophoneStt()" id="stt-mic-btn" class="w-16 h-16 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-600/30 transition-all text-2xl">
+            🎙️
+          </button>
+          <span id="stt-status-text" class="text-xs text-slate-400 mt-2 font-medium">Bấm vào biểu tượng micro để bắt đầu nói</span>
+        </div>
+
+        <div id="stt-transcript-box" class="bg-slate-950 p-4 rounded-xl border border-slate-800 min-h-[90px] text-xs text-slate-200 text-left">
+          <span class="text-slate-600 italic">Văn bản bạn đọc sẽ hiển thị tại đây...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Natural Voice Showcase Section (Non-Google) -->
+    <section class="bg-slate-900 border border-emerald-500/30 rounded-2xl p-5 shadow-xl space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-sm md:text-base font-bold text-white flex items-center gap-2">
+            <span>🎧</span> Bảng Mẫu Các Giọng Đối Thoại Tự Nhiên Mới (Xóa bỏ cảm giác Google Robot)
+          </h2>
+          <p class="text-[11px] text-slate-400 mt-0.5">
+            Ngữ điệu đàm thoại đời thường, lên bổng xuống trầm tự nhiên, âm thanh trong trẻo.
+          </p>
+        </div>
+        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full font-bold">
+          Conversational Neural
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="text-xs font-bold text-indigo-300">Brian (US Nam - Tự nhiên, ấm)</div>
+          <audio controls class="w-full h-7" src="/BAI_NOP_HOAN_CHINH/Audio_1_Spk1_Brian_TuNhien.mp3"></audio>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="text-xs font-bold text-purple-300">Ava (US Nữ - Trẻ trung, tự nhiên)</div>
+          <audio controls class="w-full h-7" src="/BAI_NOP_HOAN_CHINH/Audio_1_Spk1_Ava_NuTuNhien.mp3"></audio>
+        </div>
+        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1.5">
+          <div class="text-xs font-bold text-emerald-300">Ryan (UK Nam - Chuẩn BBC)</div>
+          <audio controls class="w-full h-7" src="/BAI_NOP_HOAN_CHINH/Audio_1_Spk1_Ryan_GiongAnh.mp3"></audio>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-slate-500 py-2">
+      Bit1 AI Voice Studio • Chạy trên cổng độc lập <code class="text-indigo-400 font-mono">http://localhost:5180</code>
+    </footer>
+
+  </div>
+
+  <script>
+    // Global State
+    let currentRecAudio = 1;
+    let currentRecSpeaker = 1; // 1 or 2
+    let scriptDatabase = {};
+    let recordedChunksMap = {}; // key: `audio_spk_idx` => { base64, blobUrl, duration, spokenText, evalData }
+    let activeMediaRecorder = null;
+    let activeRecordingIndex = null;
+    let activeSttRecognition = null;
+    let currentSpokenTranscript = "";
+    let recordingTimerInterval = null;
+    let recordingSeconds = 0;
+    let userBeeApiKey = localStorage.getItem('bee_api_key') || "sk-bee-9a4e3ae0de60aaab4298ad268bf3a66ef42e5e59ac4ccd7506750d71d80622ae";
+
+    // Ready-made Assignment Data for Tab 2
+    const AUDIOS_DATA = {
+      1: {
+        title: "Audio 1: Cặp âm /iː/ - /ɪ/ & /e/ - /æ/",
+        pairs: "peel /iː/ vs pill /ɪ/ • leave vs live • leak vs lick • pen vs pan • sheep vs ship",
+        spk1_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_1_Speaker_1.mp3",
+        spk2_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_1_Speaker_2.mp3",
+        spk1_text: "Hey Brad! Are you ready to leave? Did you peel the apples and put the peel in the bin? Oh no, stop it leaking! Do not just let the dog lick it! Take a pin or a peg to fix it. Wait, do we need bread or jam? Got it. Should I bring a pen to write down the bill, or maybe a cheque? Okay. By the way, where are we going to live during the trip? Near the sheep or near the big ship? Awesome! Ring the bell, mark an X on the map, and let us go!",
+        spk2_text: "Yes, I did. But look at the sink, it is starting to leak! Fixed! Now, what about the food? Should I pack this tin of beans? Both! Put the bread in a pan, and throw out that old bean in the bin. Just bring a pen. Oh, and do not forget to send a message to the men at the farm. Near the field. We can see the cute little chicks with yellow cheeks, a little pig, and maybe even a sheep."
+      },
+      2: {
+        title: "Audio 2: Cặp âm /ɑː/ - /ʌ/ & /ɒ/ - /ɔː/",
+        pairs: "park /ɑː/ vs truck /ʌ/ • barn vs hut • cod /ɒ/ vs cord /ɔː/ • cap vs cup",
+        spk1_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_2_Speaker_1.mp3",
+        spk2_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_2_Speaker_2.mp3",
+        spk1_text: "Hey Dawn! Are you ready to pack for the trip? Remember to park the truck near the old barn, not near the small hut. Calm down, Dawn. Keep the cat in its cot, and come check the food. We have a fresh bun, some fried carp, and a fresh cod. Put it in a sack, then tie it with a cord. Oh, watch out for that nasty bug on the cart! Here is your hat and your favorite cap. Drink a cup of water, turn off the tap, and put a top on the pot.",
+        spk2_text: "Got it, Don! Is there a ban on bringing animals? My cat wants to chase a fox in the park. Great! Put the cod and carp in a pot, and bring some forks. Should I put the bun into a sack or a box? Ouch! It bit my ankle! My uncle told me to be careful. Where is my hat? It is hot weather outside. Done! I also sent a fax to your uncle. Now, let us carry in these heavy sacks. My heart is beating fast, but I am ready for some outdoor sport!"
+      },
+      3: {
+        title: "Audio 3: Cặp âm /uː/ - /ʊ/ & /ɜː/ - /ə/",
+        pairs: "pool /uː/ vs pull /ʊ/ • fool vs full • bird /ɜː/ vs bud /ə/ • worker vs walker",
+        spk1_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_3_Speaker_1.mp3",
+        spk2_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_3_Speaker_2.mp3",
+        spk1_text: "Hey Luke! Look at the garden! It is 4 o'clock and we still need to pot this plant and put it near the fern. Do not be lazy! Pull the hose near the pool. Be careful not to step on that worm near the rock or a rook might eat it. It is a bird. The bird cooed nicely. It would stay if you did not scare it. By the way, who wooed that girl sitting by the beach? Right. Help me take this box of books inside. Make sure to lock the door so no one will look inside. Haha! Taking a walk with a fast walker like you is fun, even if you are a slow worker. Eat a bun and let us go!",
+        spk2_text: "I could help, but I am full! That warm soup with the cod was delicious. I am no fool to work on a full stomach. Okay, okay. Wait, look at the bed of flowers. Is that a bud or a colorful bird? That is my sister. She is wearing a fur coat because of the cold west wind. But today is the worst wind ever. It made a gull fly away. Do not worry, I will not turn the wrong way. The sign says \"turn\", not \"ten\". Let us hurry or the sun will burn us."
+      },
+      4: {
+        title: "Audio 4: Nguyên âm đôi Diphthongs (/aɪ/, /eə/, /ɪə/, /əʊ/)",
+        pairs: "pie /aɪ/ • pear /eə/ • pier /ɪə/ • beer /ɪə/ • bowl /əʊ/ • coin /ɔɪ/",
+        spk1_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_4_Speaker_1.mp3",
+        spk2_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_4_Speaker_2.mp3",
+        spk1_text: "Hey Jane! Take a look at the boat! Did you put the fresh pie and the pear into the bowl? Do not worry. Ouch! A sharp bone in this chicken hit my brow. I am fine. Look, there is a big cow standing in the shade near the wooden chairs. What an odd age we live in. Nice! Let us sit by the pier, drink a cold beer, and take a taste of the pie. Wow, I see a golden coin on that board! Should I bow down to pick it up? Do not worry, I will not lose a single tear. Pass me that paper to wrap the food, and let us ride my bike home after this.",
+        spk2_text: "Yes, Roy, but wait! Do not drop that hot oil! It can boil quickly and cause a terrible pain. Oh, let me check. Keep your eye open. Thank goodness, it did not hit your ear or your beard. Haha! Take a note of this: I woke up early to buy this toy kite for my nephew. Check its height when it flies! Good idea. The ocean air is so fresh! Watch that wooden board float near the pier. Be careful, or you will tear your new coat! Do not grouse if you drop your phone into the water. Great! Look, that fluffy bear toy on the boat has funny hair. Let us go, Joe is waiting for us."
+      },
+      5: {
+        title: "Audio 5: Các cặp phụ âm /p/-/b/, /t/-/d/, /tʃ/-/dʒ/, /ʃ/-/ʒ/",
+        pairs: "choking /tʃ/ vs joking /dʒ/ • cheap vs Jeep • measure /ʒ/ vs shoe /ʃ/",
+        spk1_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_5_Speaker_1.mp3",
+        spk2_file: "/BAI_NOP_HOAN_CHINH/Bai_Nop_Audio_5_Speaker_2.mp3",
+        spk1_text: "Hey Poppy! Did you get a pen to write your age and name on this card? Are you choking or joking? Wow, look at the collision outside the shoe shop! An ambulance is taking a casualty to the hospital. Got it. Let us sip some tea first. Did you pack the pear and the little bear toy into the bin? Okay. I need to measure my feet for new casual shoes. Occasionally, I get a foot massage after a long walk. Wow! Should I sew a letter H or a C on my jacket?",
+        spk2_text: "Yes, Ben, but wait! Look at Sue! She is trying to push that cheap green Jeep near the pub. Oh no, I hope everyone is safe. By the way, Bobby asked us to ship this large box of cherries to Jerry's house. No, I put them in a bag. Throw out that old pin and that ash from the barbecue. Do not drop your cap inside the cab. Good idea. Show me your shoe size. Look at that larch tree on the ridges. The mountain is full of natural riches. Write H. Now, help me catch that cute pup. Puss! Come here, little doggy!"
+      }
+    };
+
+    function toggleBeeModal() {
+      const m = document.getElementById('bee-modal');
+      m.classList.toggle('hidden');
+    }
+
+    function saveBeeKey() {
+      const k = document.getElementById('input-bee-key').value.trim();
+      if (k) {
+        userBeeApiKey = k;
+        localStorage.setItem('bee_api_key', k);
+      }
+      toggleBeeModal();
+      alert('Đã lưu cấu hình Beeknoee API Key!');
+    }
+
+    function switchMainTab(tabId) {
+      ['recorder', 'assignments', 'generator', 'tts', 'stt'].forEach(t => {
+        const sec = document.getElementById(`tab-${t}-section`);
+        const nav = document.getElementById(`nav-${t}`);
+        if (sec) sec.classList.add('hidden');
+        if (nav) nav.className = "px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all flex items-center gap-1.5";
+      });
+      const activeSec = document.getElementById(`tab-${tabId}-section`);
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if (activeSec) activeSec.classList.remove('hidden');
+      if (activeNav) activeNav.className = "px-4 py-2.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 transition-all flex items-center gap-1.5";
+    }
+
+    // Load Scripts from /api/scripts on start
+    async function initScriptsData() {
+      try {
+        const res = await fetch('/api/scripts');
+        if (!res.ok) throw new Error('API scripts not ok');
+        scriptDatabase = await res.json();
+      } catch (e) {
+        try {
+          const res2 = await fetch('./audio_scripts_data.json');
+          scriptDatabase = await res2.json();
+        } catch (e2) {
+          console.warn('Cannot fetch scripts from API, using fallback data', e2);
+        }
+      }
+      renderRecorderSentences();
+    }
+
+    // Recorder Audio Selection
+    function selectRecorderAudio(num) {
+      currentRecAudio = num;
+      document.querySelectorAll('.rec-tab').forEach((b, idx) => {
+        if (idx + 1 === num) {
+          b.className = "rec-tab p-3 rounded-xl text-left border bg-indigo-900/70 border-indigo-500 text-white font-bold transition-all shadow-md";
+        } else {
+          b.className = "rec-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700";
+        }
+      });
+      renderRecorderSentences();
+    }
+
+    // Recorder Speaker Selection
+    function selectRecorderSpeaker(spk) {
+      currentRecSpeaker = spk;
+      const btn1 = document.getElementById('role-btn-spk1');
+      const btn2 = document.getElementById('role-btn-spk2');
+      if (spk === 1) {
+        btn1.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow transition-all";
+        btn2.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:text-white transition-all";
+      } else {
+        btn2.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white shadow transition-all";
+        btn1.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-950 text-slate-300 border border-slate-800 hover:text-white transition-all";
+      }
+      renderRecorderSentences();
+    }
+
+    // Get current sentence list
+    function getCurrentSentences() {
+      const audioData = scriptDatabase[currentRecAudio] || scriptDatabase[String(currentRecAudio)];
+      if (audioData) {
+        return currentRecSpeaker === 1 ? audioData.speaker_1 : audioData.speaker_2;
+      }
+      return [];
+    }
+
+    // Render sentences cards
+    function renderRecorderSentences() {
+      const container = document.getElementById('recorder-sentences-container');
+      const sentences = getCurrentSentences();
+
+      if (!sentences || sentences.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">Đang tải danh sách câu từ kịch bản...</div>`;
+        return;
+      }
+
+      let recordedCount = 0;
+      let html = '';
+
+      sentences.forEach((s, idx) => {
+        const itemKey = `${currentRecAudio}_${currentRecSpeaker}_${idx}`;
+        const rec = recordedChunksMap[itemKey];
+        const hasRec = rec ? true : false;
+        if (hasRec) recordedCount++;
+
+        html += `
+          <div id="sentence-card-${idx}" class="bg-slate-900/90 border ${hasRec ? 'border-emerald-500/50 bg-emerald-950/10' : 'border-slate-800'} rounded-2xl p-4 md:p-5 shadow-lg transition-all space-y-3">
+            
+            <!-- Card Header -->
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold ${hasRec ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-slate-800 text-slate-300'} font-mono">
+                  Câu ${idx + 1} / ${sentences.length}
+                </span>
+                <span id="badge-status-${idx}" class="text-xs font-bold ${hasRec ? 'text-emerald-400' : 'text-slate-400'} flex items-center gap-1">
+                  ${hasRec ? `<span>✅</span> Đã thu xong (${rec.duration || 0}s)` : '<span>⚪</span> Chưa thu'}
+                </span>
+              </div>
+
+              <!-- Top Sample Audio Button -->
+              <button onclick="playNativeSample('${escapeHtml(s.text)}', this)" class="text-[11px] bg-slate-950 hover:bg-slate-800 text-indigo-300 border border-indigo-500/30 px-2.5 py-1 rounded-lg font-bold transition-all flex items-center gap-1">
+                <span>🔊</span> Nghe Mẫu AI Phát Âm
+              </button>
+            </div>
+
+            <!-- Text Content -->
+            <div class="space-y-1">
+              <div class="text-sm md:text-base font-bold text-white tracking-wide leading-relaxed">
+                ${s.text}
+              </div>
+              ${s.ipa ? `<div class="text-xs text-indigo-300 font-mono tracking-wider">${s.ipa}</div>` : ''}
+              ${s.vi ? `<div class="text-xs text-slate-400 italic">${s.vi}</div>` : ''}
+            </div>
+
+            <!-- Action Toolbar -->
+            <div class="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-2 flex-wrap">
+                <button onclick="toggleRecordSentence(${idx})" id="btn-rec-${idx}" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${hasRec ? 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700' : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/30'}">
+                  <span>🎙️</span> <span id="label-rec-${idx}">${hasRec ? 'Thu lại câu này' : 'Bắt đầu thu âm'}</span>
+                </button>
+                <span id="timer-rec-${idx}" class="text-xs font-mono font-bold text-red-400 hidden">00:00</span>
+
+                <!-- Button Đánh Giá Phát Âm Liền -->
+                <button onclick="evaluateRecordedSentence(${idx})" id="btn-eval-${idx}" class="${hasRec ? 'inline-flex' : 'hidden'} px-3 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md shadow-purple-600/25 items-center gap-1.5 transition-all">
+                  <span>🎯</span> Đánh Giá Liền Câu Này
+                </button>
+              </div>
+
+              <!-- Audio Player if already recorded -->
+              <div id="player-container-${idx}" class="${hasRec ? 'flex' : 'hidden'} items-center gap-2 w-full sm:w-auto">
+                <span class="text-[11px] text-emerald-400 font-bold shrink-0">Giọng bạn:</span>
+                <audio id="audio-preview-${idx}" controls class="h-8 max-w-xs" src="${hasRec ? rec.blobUrl : ''}"></audio>
+              </div>
+            </div>
+
+            <!-- Instant Assessment Box (Initially hidden or rendered if exists) -->
+            <div id="eval-result-box-${idx}" class="${rec && rec.evalData ? 'block' : 'hidden'} mt-3 bg-slate-950 p-4 rounded-xl border border-indigo-500/40 space-y-2.5">
+              ${rec && rec.evalData ? renderEvaluationHtml(rec.evalData, idx) : ''}
+            </div>
+
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+
+      // Update progress
+      const total = sentences.length;
+      const pct = Math.round((recordedCount / total) * 100);
+      document.getElementById('recorder-progress-text').innerText = `${recordedCount} / ${total} câu`;
+      document.getElementById('recorder-progress-bar').style.width = `${pct}%`;
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    // Play native sample audio using /api/voice/tts
+    async function playNativeSample(text, btnElement) {
+      const origText = btnElement.innerHTML;
+      btnElement.disabled = true;
+      btnElement.innerHTML = `<span>⏳</span> Đang tải...`;
+      try {
+        const res = await fetch('/api/voice/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: text,
+            voice: 'en-US-BrianMultilingualNeural',
+            rate: '-4%'
+          })
+        });
+        const data = await res.json();
+        if (data.success && data.audioUrl) {
+          const snd = new Audio(data.audioUrl);
+          snd.play();
+        } else {
+          alert('Không thể phát câu mẫu: ' + (data.error || 'Lỗi server'));
+        }
+      } catch (err) {
+        alert('Lỗi: ' + err.message);
+      } finally {
+        btnElement.disabled = false;
+        btnElement.innerHTML = origText;
+      }
+    }
+
+    // Toggle recording for specific sentence
+    async function toggleRecordSentence(idx) {
+      if (activeRecordingIndex !== null && activeRecordingIndex === idx) {
+        stopSentenceRecording();
+        return;
+      }
+
+      if (activeRecordingIndex !== null && activeRecordingIndex !== idx) {
+        stopSentenceRecording();
+      }
+
+      startSentenceRecording(idx);
+    }
+
+    async function startSentenceRecording(idx) {
+      try {
+        currentSpokenTranscript = "";
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        let options = { mimeType: 'audio/webm' };
+        if (!MediaRecorder.isTypeSupported('audio/webm')) {
+          options = { mimeType: 'audio/mp4' };
+        }
+
+        activeMediaRecorder = new MediaRecorder(stream, options);
+        let audioChunks = [];
+
+        // Parallel Web Speech Recognition for instant client-side STT
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRec) {
+          try {
+            activeSttRecognition = new SpeechRec();
+            activeSttRecognition.lang = 'en-US';
+            activeSttRecognition.continuous = true;
+            activeSttRecognition.interimResults = true;
+            activeSttRecognition.onresult = (e) => {
+              let t = '';
+              for (let i = 0; i < e.results.length; i++) {
+                t += e.results[i][0].transcript + ' ';
+              }
+              currentSpokenTranscript = t.trim();
+            };
+            activeSttRecognition.start();
+          } catch (e) {
+            console.warn('STT recognition start error:', e);
+          }
+        }
+
+        activeMediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        activeMediaRecorder.onstop = async () => {
+          stream.getTracks().forEach(t => t.stop());
+          clearInterval(recordingTimerInterval);
+          if (activeSttRecognition) {
+            try { activeSttRecognition.stop(); } catch (e) {}
+            activeSttRecognition = null;
+          }
+
+          const mime = activeMediaRecorder.mimeType || 'audio/webm';
+          const blob = new Blob(audioChunks, { type: mime });
+          const blobUrl = URL.createObjectURL(blob);
+          const base64 = await blobToBase64(blob);
+
+          const itemKey = `${currentRecAudio}_${currentRecSpeaker}_${idx}`;
+          recordedChunksMap[itemKey] = {
+            base64: base64,
+            blobUrl: blobUrl,
+            duration: recordingSeconds,
+            spokenText: currentSpokenTranscript
+          };
+
+          // Update UI elements
+          const card = document.getElementById(`sentence-card-${idx}`);
+          const badge = document.getElementById(`badge-status-${idx}`);
+          const btn = document.getElementById(`btn-rec-${idx}`);
+          const label = document.getElementById(`label-rec-${idx}`);
+          const timer = document.getElementById(`timer-rec-${idx}`);
+          const btnEval = document.getElementById(`btn-eval-${idx}`);
+          const playerCont = document.getElementById(`player-container-${idx}`);
+          const player = document.getElementById(`audio-preview-${idx}`);
+
+          card.className = "bg-slate-900/90 border border-emerald-500/50 bg-emerald-950/10 rounded-2xl p-4 md:p-5 shadow-lg transition-all space-y-3";
+          badge.className = "text-xs font-bold text-emerald-400 flex items-center gap-1";
+          badge.innerHTML = `<span>✅</span> Đã thu xong (${recordingSeconds}s)`;
+          btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-slate-800 text-slate-300 hover:text-white border border-slate-700";
+          label.innerText = "Thu lại câu này";
+          timer.classList.add('hidden');
+
+          if (btnEval) {
+            btnEval.classList.remove('hidden');
+            btnEval.classList.add('inline-flex');
+          }
+
+          player.src = blobUrl;
+          playerCont.classList.remove('hidden');
+          playerCont.classList.add('flex');
+
+          activeRecordingIndex = null;
+          activeMediaRecorder = null;
+          updateProgressStats();
+
+          // Auto-evaluate if checked
+          const autoEval = document.getElementById('chk-auto-evaluate').checked;
+          if (autoEval) {
+            evaluateRecordedSentence(idx);
+          }
+        };
+
+        activeMediaRecorder.start();
+        activeRecordingIndex = idx;
+        recordingSeconds = 0;
+
+        // UI active recording
+        const btn = document.getElementById(`btn-rec-${idx}`);
+        const label = document.getElementById(`label-rec-${idx}`);
+        const timer = document.getElementById(`timer-rec-${idx}`);
+        const badge = document.getElementById(`badge-status-${idx}`);
+
+        btn.className = "px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 bg-red-600 text-white recording-pulse shadow-lg shadow-red-600/40";
+        label.innerText = "⏹️ Bấm để DỪNG THU";
+        timer.classList.remove('hidden');
+        timer.innerText = "00:00";
+        badge.className = "text-xs font-bold text-red-400 flex items-center gap-1";
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> Đang ghi âm & nhận diện...`;
+
+        recordingTimerInterval = setInterval(() => {
+          recordingSeconds++;
+          const m = String(Math.floor(recordingSeconds / 60)).padStart(2, '0');
+          const s = String(recordingSeconds % 60).padStart(2, '0');
+          timer.innerText = `${m}:${s}`;
+        }, 1000);
+
+      } catch (err) {
+        alert('Lỗi truy cập Micro: Hãy kiểm tra quyền truy cập microphone trên trình duyệt của bạn!');
+        console.error(err);
+      }
+    }
+
+    function stopSentenceRecording() {
+      if (activeMediaRecorder && activeMediaRecorder.state !== 'inactive') {
+        activeMediaRecorder.stop();
+      }
+    }
+
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    // Instant Pronunciation Evaluation (Beeknoee AI / Local)
+    async function evaluateRecordedSentence(idx) {
+      const sentences = getCurrentSentences();
+      const s = sentences[idx];
+      const itemKey = `${currentRecAudio}_${currentRecSpeaker}_${idx}`;
+      const rec = recordedChunksMap[itemKey];
+
+      if (!rec || !rec.base64) {
+        return alert('Vui lòng thu âm câu này trước khi đánh giá!');
+      }
+
+      const evalBox = document.getElementById(`eval-result-box-${idx}`);
+      const btnEval = document.getElementById(`btn-eval-${idx}`);
+
+      if (btnEval) {
+        btnEval.disabled = true;
+        btnEval.innerHTML = `<span>⏳</span> Đang phân tích AI...`;
+      }
+
+      evalBox.classList.remove('hidden');
+      evalBox.innerHTML = `
+        <div class="flex items-center gap-2 text-xs text-indigo-300 py-3">
+          <span class="w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin"></span>
+          <span>Beeknoee AI đang đối chiếu âm vị và phân tích cặp âm...</span>
+        </div>
+      `;
+
+      try {
+        const res = await fetch('/api/voice/evaluate-sentence', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            audioNum: currentRecAudio,
+            speaker: currentRecSpeaker,
+            sentenceNum: idx + 1,
+            targetText: s.text,
+            spokenText: rec.spokenText || "",
+            audioBase64: rec.base64,
+            beeApiKey: userBeeApiKey
+          })
+        });
+
+        const data = await res.json();
+        rec.evalData = data;
+        evalBox.innerHTML = renderEvaluationHtml(data, idx);
+      } catch (err) {
+        evalBox.innerHTML = `<div class="text-xs text-red-400">Lỗi đánh giá: ${err.message}</div>`;
+      } finally {
+        if (btnEval) {
+          btnEval.disabled = false;
+          btnEval.innerHTML = `<span>🎯</span> Đánh Giá Lại Câu Này`;
+        }
+      }
+    }
+
+    function renderEvaluationHtml(data, idx) {
+      const score = data.score || 0;
+      let scoreColor = 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10';
+      if (score < 70) scoreColor = 'text-amber-400 border-amber-500/40 bg-amber-500/10';
+      if (score < 55) scoreColor = 'text-red-400 border-red-500/40 bg-red-500/10';
+
+      let wordsHtml = '';
+      (data.wordsAnalysis || []).forEach(w => {
+        let pillClass = 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        let icon = '✓';
+        if (w.status === 'warning') {
+          pillClass = 'bg-amber-500/20 text-amber-300 border border-amber-500/40';
+          icon = '⚠️';
+        } else if (w.status === 'error') {
+          pillClass = 'bg-red-500/20 text-red-300 border border-red-500/40';
+          icon = '✗';
+        }
+        wordsHtml += `
+          <span class="word-pill ${pillClass}" title="${escapeHtml(w.feedback || '')}">
+            <span>${icon}</span>
+            <span>${w.word}</span>
+          </span>
+        `;
+      });
+
+      return `
+        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-slate-800 pb-2.5">
+          <div class="flex items-center gap-2.5">
+            <div class="px-3 py-1 rounded-xl font-black text-sm border ${scoreColor} flex items-center gap-1.5">
+              <span>⭐</span> ${score} / 100 điểm
+            </div>
+            <div class="text-xs font-bold text-white">${data.grade || ''}</div>
+          </div>
+          <div class="text-[10px] text-slate-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-lg flex items-center gap-1">
+            <span>⚡</span> Engine: <strong class="text-indigo-300">${data.engine || 'AI Engine'}</strong>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-[10px] uppercase font-bold text-slate-400 mb-1">Chi tiết từng từ bạn đã phát âm:</div>
+          <div class="flex flex-wrap gap-1 leading-relaxed">
+            ${wordsHtml}
+          </div>
+        </div>
+
+        <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 text-xs space-y-1">
+          <div class="text-[11px] font-bold text-indigo-300 flex items-center gap-1">
+            <span>💡</span> Góp ý phát âm & Khẩu hình:
+          </div>
+          <p class="text-slate-300 leading-relaxed text-[11px]">
+            ${data.generalAdvice || ''}
+          </p>
+        </div>
+
+        ${data.beeknoeeStatus ? `<div class="text-[10px] text-slate-500 italic text-right">${data.beeknoeeStatus}</div>` : ''}
+      `;
+    }
+
+    function updateProgressStats() {
+      const sentences = getCurrentSentences();
+      let count = 0;
+      sentences.forEach((s, idx) => {
+        const itemKey = `${currentRecAudio}_${currentRecSpeaker}_${idx}`;
+        if (recordedChunksMap[itemKey]) count++;
+      });
+      const total = sentences.length;
+      const pct = Math.round((count / total) * 100);
+      document.getElementById('recorder-progress-text').innerText = `${count} / ${total} câu`;
+      document.getElementById('recorder-progress-bar').style.width = `${pct}%`;
+    }
+
+    // Splicing & Concatenation of all sentences
+    async function mergeAllSentences() {
+      const sentences = getCurrentSentences();
+      if (!sentences || sentences.length === 0) return alert('Chưa tải được danh sách câu!');
+
+      const autoFallback = document.getElementById('chk-auto-fallback').checked;
+      const silenceMs = parseInt(document.getElementById('sel-silence-ms').value, 10);
+      const mergeBtn = document.getElementById('btn-merge-all');
+
+      let recordedCount = 0;
+      const payloadSentences = [];
+
+      sentences.forEach((s, idx) => {
+        const itemKey = `${currentRecAudio}_${currentRecSpeaker}_${idx}`;
+        const rec = recordedChunksMap[itemKey];
+        if (rec) {
+          recordedCount++;
+          payloadSentences.push({
+            num: idx + 1,
+            text: s.text,
+            audioBase64: rec.base64,
+            useFallbackTts: false
+          });
+        } else {
+          payloadSentences.push({
+            num: idx + 1,
+            text: s.text,
+            audioBase64: "",
+            useFallbackTts: autoFallback
+          });
+        }
+      });
+
+      if (recordedCount === 0 && !autoFallback) {
+        return alert('Bạn chưa thu âm câu nào! Vui lòng thu ít nhất 1 câu hoặc bật tùy chọn "Tự bù câu chưa thu bằng giọng mẫu AI".');
+      }
+
+      mergeBtn.disabled = true;
+      mergeBtn.innerHTML = `<span>⏳</span> Đang chuyển mã và cắt ghép ${sentences.length} câu bằng FFmpeg...`;
+
+      try {
+        const res = await fetch('/api/voice/merge-sentences', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            audioNum: currentRecAudio,
+            speaker: currentRecSpeaker,
+            silenceMs: silenceMs,
+            sentences: payloadSentences
+          })
+        });
+
+        const data = await res.json();
+        if (data.success && data.audioUrl) {
+          const card = document.getElementById('merged-result-card');
+          const title = document.getElementById('merged-title-text');
+          const player = document.getElementById('merged-audio-player');
+          const dl = document.getElementById('merged-download-btn');
+          const details = document.getElementById('merged-status-details');
+
+          const finalUrl = data.audioUrl + '?t=' + Date.now();
+          player.src = finalUrl;
+          dl.href = data.audioUrl;
+          dl.download = data.fileName;
+
+          title.innerText = `🎉 Đã Ghép Xong Bài Nộp Audio ${currentRecAudio} - Speaker ${currentRecSpeaker}!`;
+          details.innerText = `Đã ghép thành công ${data.mergedCount} câu (gồm ${recordedCount} câu giọng thật của bạn).`;
+
+          card.classList.remove('hidden');
+          card.scrollIntoView({ behavior: 'smooth' });
+          player.play();
+        } else {
+          alert('Lỗi ghép file: ' + (data.error || 'Lỗi server'));
+        }
+      } catch (e) {
+        alert('Lỗi kết nối máy chủ: ' + e.message);
+      } finally {
+        mergeBtn.disabled = false;
+        mergeBtn.innerHTML = `<span>✨</span> BẤM VÀO ĐÂY ĐỂ GHÉP THÀNH BÀI NỘP HOÀN CHỈNH (.MP3)`;
+      }
+    }
+
+    // Ready-made assignments loader for Tab 2
+    let currentAudioNum = 1;
+    function loadAudioAssignment(num) {
+      currentAudioNum = num;
+      document.querySelectorAll('.audio-tab').forEach((b, idx) => {
+        if (idx + 1 === num) {
+          b.className = "audio-tab p-3 rounded-xl text-left border bg-indigo-900/70 border-indigo-500 text-white font-bold transition-all shadow-md";
+        } else {
+          b.className = "audio-tab p-3 rounded-xl text-left border bg-slate-900 border-slate-800 text-slate-400 font-bold transition-all hover:border-slate-700";
+        }
+      });
+
+      const d = AUDIOS_DATA[num];
+      const html = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+          <div>
+            <h2 class="text-xl font-bold text-white">${d.title}</h2>
+            <div class="text-xs text-indigo-400 mt-0.5">${d.pairs}</div>
+          </div>
+          <span class="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 px-3 py-1 rounded-full font-bold self-start sm:self-auto">
+            Bản Học Viên Tự Nhiên
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-indigo-300">🎙️ Speaker 1 (Vai chính)</h3>
+              <a href="${d.spk1_file}" download class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                📥 Tải MP3
+              </a>
+            </div>
+            <audio controls class="w-full" src="${d.spk1_file}"></audio>
+            <div>
+              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Lời thoại kịch bản:</div>
+              <p class="text-xs text-slate-300 bg-slate-900/80 p-3 rounded-lg border border-slate-800/80 leading-relaxed max-h-36 overflow-y-auto font-mono">
+                ${d.spk1_text}
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-purple-300">🎙️ Speaker 2 (Vai đối thoại)</h3>
+              <a href="${d.spk2_file}" download class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                📥 Tải MP3
+              </a>
+            </div>
+            <audio controls class="w-full" src="${d.spk2_file}"></audio>
+            <div>
+              <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">Lời thoại kịch bản:</div>
+              <p class="text-xs text-slate-300 bg-slate-900/80 p-3 rounded-lg border border-slate-800/80 leading-relaxed max-h-36 overflow-y-auto font-mono">
+                ${d.spk2_text}
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById('assignment-detail-card').innerHTML = html;
+      document.getElementById('gen-text').value = d.spk1_text;
+    }
+
+    function setGenPrompt(p) {
+      document.getElementById('gen-prompt').value = p;
+    }
+
+    async function generateCustomPromptAudio() {
+      const text = document.getElementById('gen-text').value.trim();
+      const voice = document.getElementById('gen-voice').value;
+      const level = document.getElementById('gen-level').value;
+      const prompt = document.getElementById('gen-prompt').value.trim();
+      const btn = document.getElementById('btn-gen-audio');
+
+      if (!text) return alert('Vui lòng nhập văn bản tiếng Anh!');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳</span> Đang áp dụng Prompt và sinh giọng đọc...';
+
+      try {
+        const res = await fetch('/api/voice/clone', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, voice, level, prompt })
+        });
+        const data = await res.json();
+        if (data.success && data.audioUrl) {
+          const card = document.getElementById('gen-result-card');
+          const player = document.getElementById('gen-audio-player');
+          const dl = document.getElementById('gen-download-btn');
+          player.src = data.audioUrl + '?t=' + Date.now();
+          dl.href = data.audioUrl;
+          card.classList.remove('hidden');
+          player.play();
+        } else {
+          alert('Lỗi: ' + (data.error || 'Không thể tạo âm thanh'));
+        }
+      } catch (err) {
+        alert('Lỗi kết nối máy chủ: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>✨</span> Sinh Giọng Đọc Theo Prompt Này';
+      }
+    }
+
+    async function generateFreeTts() {
+      const text = document.getElementById('tts-free-text').value.trim();
+      const voice = document.getElementById('tts-free-voice').value;
+      const rate = document.getElementById('tts-free-rate').value;
+      const btn = document.getElementById('btn-free-tts');
+
+      if (!text) return alert('Vui lòng nhập văn bản!');
+      btn.disabled = true;
+      btn.innerText = 'Đang xử lý...';
+
+      try {
+        const res = await fetch('/api/voice/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, voice, rate })
+        });
+        const data = await res.json();
+        if (data.success && data.audioUrl) {
+          const resBox = document.getElementById('free-tts-result');
+          const player = document.getElementById('free-tts-audio');
+          const dl = document.getElementById('free-tts-download');
+          player.src = data.audioUrl + '?t=' + Date.now();
+          dl.href = data.audioUrl;
+          resBox.classList.remove('hidden');
+          player.play();
+        }
+      } catch (e) {
+        alert('Lỗi: ' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Sinh Giọng Đọc Ngay';
+      }
+    }
+
+    // Web Speech API for STT Microphone Tab
+    let isRecordingStt = false;
+    let recognition = null;
+    function toggleMicrophoneStt() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) return alert('Trình duyệt chưa hỗ trợ Web Speech API. Hãy dùng Chrome hoặc Edge!');
+
+      const btn = document.getElementById('stt-mic-btn');
+      const statusText = document.getElementById('stt-status-text');
+      const box = document.getElementById('stt-transcript-box');
+
+      if (isRecordingStt) {
+        if (recognition) recognition.stop();
+        isRecordingStt = false;
+        btn.className = "w-16 h-16 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-600/30 transition-all text-2xl";
+        statusText.innerText = "Bấm micro để bắt đầu nói";
+      } else {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = () => {
+          isRecordingStt = true;
+          btn.className = "w-16 h-16 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg shadow-red-600/50 animate-pulse transition-all text-2xl";
+          statusText.innerText = "Đang lắng nghe... Nói tiếng Anh ngay bây giờ!";
+          box.innerHTML = '';
+        };
+
+        recognition.onresult = (e) => {
+          let str = '';
+          for (let i = 0; i < e.results.length; i++) {
+            str += e.results[i][0].transcript + ' ';
+          }
+          box.innerText = str;
+        };
+
+        recognition.onerror = () => {
+          isRecordingStt = false;
+          btn.className = "w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-2xl";
+          statusText.innerText = "Đã dừng hoặc chưa cấp quyền mic.";
+        };
+
+        recognition.onend = () => {
+          isRecordingStt = false;
+          btn.className = "w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-2xl";
+          statusText.innerText = "Bấm micro để nói lại";
+        };
+
+        recognition.start();
+      }
+    }
+
+    // Initialize application
+    initScriptsData();
+    loadAudioAssignment(1);
+  </script>
+</body>
+</html>

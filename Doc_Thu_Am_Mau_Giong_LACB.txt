@@ -1,0 +1,49 @@
+================================================================================
+KỊCH BẢN THU ÂM MẪU GIỌNG ĐỂ CLONE AI CHUẨN XÁC NHẤT
+(PHỤC VỤ 5 BÀI TẬP MÔN LUYỆN ÂM CĂN BẢN - VB2)
+================================================================================
+
+Tài liệu này được thiết kế bao phủ 100% các cặp âm trọng tâm (Minimal Pairs) 
+từ Audio 1 đến Audio 5. Giúp AI nhận diện đúng khẩu hình và ngữ điệu tự nhiên của bạn.
+
+--------------------------------------------------------------------------------
+PHẦN 1: DÀNH CHO GOOGLE COLAB (F5-TTS) — CHỈ CẦN 1 CÂU (8 – 12 GIÂY)
+--------------------------------------------------------------------------------
+(Chỉ cần chọn đọc DUY NHẤT 1 trong 3 câu sau):
+
+[LỰA CHỌN 1 - KHUYÊN DÙNG (Bao quát Audio 1, 2 & 4)]:
+"Hey Brad, are you ready to leave? Did you pack the bread, the fresh bun, and put the peel in the bin near the old park?"
+
+[LỰA CHỌN 2 (Bao quát Audio 3 & 4 - Âm u/oo, ơ và nguyên âm đôi)]:
+"Look at that bird near the pool! The warm soup is ready, so take a seat by the pier and enjoy a taste of the pie."
+
+[LỰA CHỌN 3 (Bao quát Audio 5 - Phụ âm bật hơi ch/j, sh/s, p/b)]:
+"Poppy and Ben are joking near the shoe shop, checking the cheap green Jeep and sipping a cup of hot tea."
+
+
+--------------------------------------------------------------------------------
+PHẦN 2: DÀNH CHO ELEVENLABS HOẶC CLONE TOÀN DIỆN (1.5 – 2 PHÚT)
+--------------------------------------------------------------------------------
+(Đọc toàn bộ đoạn văn liền mạch dưới đây với nhịp độ thong thả, tự nhiên):
+
+"Hey Brad and Jane, are you ready to leave for our trip? Remember to park the truck near the old barn, not near the small hut. Did you peel the fresh apples, pack the bread in a pan, and put the peel in the bin? Look at the cute little chicks with yellow cheeks near the pool! The weather is warm, but do not let the dog lick the hot soup.
+
+Roy brought some fried cod, a fresh bun, and a cup of tea. We can sit by the pier, drink a cold beer, and watch the wooden boat float on the water. Be careful not to step on that worm near the rock, or a bird might fly down from the tree.
+
+Poppy and Ben are still checking that cheap green Jeep near the shoe shop. What a funny day! Let us measure our time, sew a letter on the jacket, ring the bell, and mark an X on the map to start our journey."
+
+
+--------------------------------------------------------------------------------
+PHẦN 3: KỸ THUẬT THU ÂM ĐỂ GIỐNG NHẤT
+--------------------------------------------------------------------------------
+1. Âm lượng & Tông giọng: 
+   - Đọc bằng đúng giọng nói hàng ngày của bạn. 
+   - Chú ý đọc rõ các âm đuôi (ending sounds: t, d, k, p, s, z).
+2. Nhịp ngắt nghỉ:
+   - Dấu phẩy (,) ngắt nghỉ ~0.5 giây.
+   - Dấu chấm (.) ngắt nghỉ ~1.0 giây.
+3. Micro:
+   - Đặt mic cách miệng 15-20 cm, hơi lệch 45 độ để tránh tiếng phả hơi thở.
+4. Tên file:
+   - Đổi tên file thu âm thành "my_voice.mp3" hoặc "my_voice.wav" để đưa vào tool/Colab.
+================================================================================
