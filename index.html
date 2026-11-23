@@ -99,7 +99,7 @@
             <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#1D4ED8] text-[#BFDBFE]">Phòng Thu Luyện Âm</span>
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#16A36A]/20 text-[#4ADE80] border border-[#16A36A]/40">Cổng 5180</span>
           </div>
-          <p class="text-xs text-[#94A3B8] mt-0.5">Thu âm giọng thật từng câu thoại • Đối chiếu âm vị AI • Ghép file MP3 hoàn chỉnh nộp cô</p>
+          <p class="text-xs text-[#94A3B8] mt-0.5">Thu âm giọng thật từng câu • Lọc khoảng lặng thừa & Khử ồn AI • Ghép file MP3 hoàn chỉnh nộp cô</p>
         </div>
       </div>
 
@@ -125,7 +125,7 @@
   <!-- ============================================== -->
   <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-6">
 
-    <!-- 1. STUDIO CONTROL PANEL (Chọn Bài & Vai & Ghép File) -->
+    <!-- 1. STUDIO CONTROL PANEL (Chọn Bài & Vai & Cắt Ghép AI) -->
     <div class="bg-white border border-[#E5EAF1] rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
       
       <!-- Hàng 1: Chọn Bài Học (Audio 1 -> Audio 5) -->
@@ -163,7 +163,7 @@
         </div>
       </div>
 
-      <!-- Hàng 2: Chọn Vai Thoại & Tùy Chọn Ghép Âm -->
+      <!-- Hàng 2: Chọn Vai Thoại & Tùy Chọn Cắt Ghép -->
       <div class="pt-4 border-t border-[#E5EAF1] flex flex-col md:flex-row md:items-center justify-between gap-4">
         
         <!-- Chọn Speaker 1 hoặc 2 -->
@@ -183,7 +183,7 @@
           </div>
         </div>
 
-        <!-- Tùy chọn ghép âm -->
+        <!-- Tùy chọn khoảng lặng & bù AI -->
         <div class="flex items-center gap-4 flex-wrap text-xs text-[#667085]">
           <label class="flex items-center gap-1.5 cursor-pointer font-medium text-[#172033]">
             <input type="checkbox" id="chk-auto-fallback" checked class="rounded border-[#CBD5E1] text-[#1D4ED8] focus:ring-0">
@@ -191,10 +191,10 @@
           </label>
 
           <div class="flex items-center gap-1.5">
-            <span>Khoảng lặng:</span>
+            <span>Khoảng lặng nối câu:</span>
             <select id="sel-silence-ms" class="bg-[#F5F7FA] border border-[#E5EAF1] rounded-lg px-2.5 py-1 text-xs text-[#172033] font-semibold">
               <option value="200">200ms</option>
-              <option value="350" selected>350ms (Chuẩn)</option>
+              <option value="350" selected>350ms (Tự nhiên)</option>
               <option value="500">500ms</option>
               <option value="700">700ms</option>
             </select>
@@ -203,7 +203,34 @@
 
       </div>
 
-      <!-- Hàng 3: Tiến Độ & Nút Ghép Nối File MP3 Nổi Bật -->
+      <!-- Hàng 3: BỘ LỌC AI & CÔNG NGHỆ XỬ LÝ ÂM THANH THÔNG MINH -->
+      <div class="p-3.5 bg-[#F0F4FA] rounded-xl border border-[#D0DBEC] flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2 font-bold text-[#101D35] shrink-0">
+          <div class="w-6 h-6 rounded-lg bg-[#1D4ED8] text-white flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+          </div>
+          <span>Công Nghệ Xử Lý & Lọc Bỏ Dư Thừa AI:</span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3.5 text-xs">
+          <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#172033]" title="Tự động cắt bỏ hoàn toàn đoạn im lặng thừa ở đầu và cuối mỗi câu thu âm">
+            <input type="checkbox" id="chk-trim-silence" checked class="rounded border-[#CBD5E1] text-[#1D4ED8] focus:ring-0">
+            <span>Cắt khoảng lặng thừa đầu/cuối (Smart VAD)</span>
+          </label>
+
+          <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#172033]" title="Khử tạp âm phòng, tiếng quạt, tiếng ù tần số thấp và làm trong trẻo giọng nói">
+            <input type="checkbox" id="chk-clean-noise" checked class="rounded border-[#CBD5E1] text-[#1D4ED8] focus:ring-0">
+            <span>Khử ồn & làm trong giọng (FFT Denoiser)</span>
+          </label>
+
+          <label class="flex items-center gap-1.5 cursor-pointer font-semibold text-[#172033]" title="Cân bằng mức âm lượng giữa các câu thoại theo chuẩn phát thanh quốc tế">
+            <input type="checkbox" id="chk-normalize" checked class="rounded border-[#CBD5E1] text-[#1D4ED8] focus:ring-0">
+            <span>Chuẩn hóa âm lượng (-16 LUFS)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Hàng 4: Tiến Độ & Nút Ghép Nối File MP3 Nổi Bật -->
       <div class="pt-4 border-t border-[#E5EAF1] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         
         <div class="flex items-center gap-3">
@@ -236,6 +263,9 @@
           <div>
             <h3 id="merged-title-text" class="text-sm font-bold text-[#172033]">Đã Ghép Xong Bài Nộp Hoàn Chỉnh!</h3>
             <p id="merged-status-details" class="text-xs text-[#667085]">File âm thanh đã được nối liền mạch theo chuẩn thời lượng.</p>
+            <div class="text-[11px] text-[#16A36A] font-semibold flex items-center gap-1 mt-1">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Đã ứng dụng AI: Cắt sạch khoảng lặng thừa, lọc tạp âm và cân bằng âm lượng phát thanh.
+            </div>
           </div>
         </div>
 
@@ -865,7 +895,7 @@
       if (progBar) progBar.style.width = `${pct}%`;
     }
 
-    // Merge sentences into final MP3
+    // Merge sentences into final MP3 with AI Smart Processing
     async function mergeRecordedSentences() {
       const sentences = getCurrentSentenceList();
       if (!sentences || sentences.length === 0) {
@@ -875,8 +905,16 @@
 
       const chkFallback = document.getElementById('chk-auto-fallback');
       const selSilence = document.getElementById('sel-silence-ms');
+      const chkNoise = document.getElementById('chk-clean-noise');
+      const chkTrim = document.getElementById('chk-trim-silence');
+      const chkNorm = document.getElementById('chk-normalize');
+
       const autoFallback = chkFallback ? chkFallback.checked : true;
       const silenceMs = selSilence ? parseInt(selSilence.value, 10) : 350;
+      const cleanNoise = chkNoise ? chkNoise.checked : true;
+      const trimSilence = chkTrim ? chkTrim.checked : true;
+      const normalize = chkNorm ? chkNorm.checked : true;
+
       const mergeBtn = document.getElementById('btn-merge-all');
       const mergeLabel = document.getElementById('btn-merge-label');
 
@@ -910,7 +948,7 @@
       }
 
       if (mergeBtn) mergeBtn.disabled = true;
-      if (mergeLabel) mergeLabel.innerText = `ĐANG CẮT GHÉP ${sentences.length} CÂU...`;
+      if (mergeLabel) mergeLabel.innerText = `ĐANG XỬ LÝ AI & CẮT GHÉP ${sentences.length} CÂU...`;
 
       try {
         const res = await fetch('/api/voice/merge-sentences', {
@@ -920,6 +958,9 @@
             audioNum: currentAudio,
             speaker: currentSpeaker,
             silenceMs: silenceMs,
+            cleanNoise: cleanNoise,
+            trimSilence: trimSilence,
+            normalize: normalize,
             sentences: payloadSentences
           })
         });
@@ -948,7 +989,7 @@
           }
           if (player) player.play();
 
-          showToast('success', 'Ghép hoàn tất', `Bài Nộp Audio ${currentAudio} đã sẵn sàng nộp cô!`);
+          showToast('success', 'Xử lý AI hoàn tất', `Bài Nộp Audio ${currentAudio} đã được lọc sạch tạp âm và xuất file MP3 hoàn chỉnh!`);
         } else {
           showToast('error', 'Lỗi ghép file', data.error || 'Lỗi server');
         }

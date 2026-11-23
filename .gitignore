@@ -5,3 +5,5 @@ __pycache__/
 
 
 ui-reference/
+BAI_NOP_HOAN_CHINH/gen_*.mp3
+recorded_sentences/gen_*.webm
