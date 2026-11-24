@@ -104,7 +104,7 @@
             <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#1D4ED8] text-[#BFDBFE]">Phòng Thu Luyện Âm Chuyên Biệt</span>
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#16A36A]/20 text-[#4ADE80] border border-[#16A36A]/40">Cổng 5180</span>
           </div>
-          <p class="text-xs text-[#94A3B8] mt-0.5">Mẫu giọng bản xứ lưu sẵn • Nghe tùy chỉnh tốc độ • Đánh giá âm vị AI tức thì không cần Key</p>
+          <p class="text-xs text-[#94A3B8] mt-0.5">Mẫu giọng bản xứ lưu sẵn • Nghe tùy chỉnh tốc độ • Ghép nối trực tiếp trên trình duyệt</p>
         </div>
       </div>
 
@@ -112,7 +112,7 @@
       <div class="flex items-center gap-2.5 self-end sm:self-auto">
         <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-[#A6F4C5] bg-[#ECFDF3] text-xs font-semibold text-[#16A36A] shadow-sm">
           <span class="w-2 h-2 rounded-full bg-[#16A36A] animate-pulse"></span>
-          <span>AI Sẵn Sàng (100% Không Cần Key)</span>
+          <span>Web Audio Engine (Chạy Mọi Nơi - Không Cần Key)</span>
         </div>
       </div>
 
@@ -221,10 +221,10 @@
       <div class="pt-4 border-t border-[#E5EAF1] bg-[#F8FAFC] -mx-5 -mb-5 sm:-mx-6 sm:-mb-6 p-4 sm:p-5 rounded-b-2xl space-y-3">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <span class="text-xs font-bold text-[#172033] uppercase tracking-wider flex items-center gap-1.5">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#1D4ED8]"></i> 4. Công Nghệ Xử Lý & Cắt Ghép Âm Thanh AI:
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-[#1D4ED8]"></i> 4. Công Nghệ Xử Lý & Cắt Ghép Âm Thanh (Dual-Engine):
           </span>
           <span class="text-[11px] font-semibold text-[#16A36A] bg-[#ECFDF3] px-2 py-0.5 rounded border border-[#A6F4C5]">
-            Đạt chuẩn phát thanh (-16 LUFS)
+            Hỗ trợ cả Web Audio Trực Tiếp & FFmpeg
           </span>
         </div>
 
@@ -233,7 +233,7 @@
             <input type="checkbox" id="chk-clean-noise" checked class="w-4 h-4 text-[#1D4ED8] rounded">
             <div>
               <div class="font-bold text-[#172033]">Khử ồn & làm trong giọng</div>
-              <div class="text-[10px] text-[#64748B]">FFT Denoiser lọc tiếng quạt & rè mic</div>
+              <div class="text-[10px] text-[#64748B]">Lọc tạp âm và micro-fades chống nổ bụp</div>
             </div>
           </label>
 
@@ -248,14 +248,14 @@
           <label class="flex items-center gap-2 p-2.5 rounded-xl border border-[#E2E8F0] bg-white cursor-pointer hover:border-[#CBD5E1] transition-all">
             <input type="checkbox" id="chk-normalize" checked class="w-4 h-4 text-[#1D4ED8] rounded">
             <div>
-              <div class="font-bold text-[#172033]">Chuẩn hóa âm lượng EBU</div>
-              <div class="text-[10px] text-[#64748B]">Cân bằng âm giữa các câu (-16 LUFS)</div>
+              <div class="font-bold text-[#172033]">Chuẩn hóa âm lượng Peak/EBU</div>
+              <div class="text-[10px] text-[#64748B]">Cân bằng âm giữa các câu đồng đều</div>
             </div>
           </label>
         </div>
 
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-          <div class="flex items-center gap-4 text-xs text-[#667085]">
+          <div class="flex items-center gap-4 text-xs text-[#667085] flex-wrap">
             <label class="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" id="chk-auto-fallback" checked class="w-4 h-4 text-[#1D4ED8] rounded">
               <span>Tự động bù giọng bản xứ nếu câu chưa kịp thu</span>
@@ -273,7 +273,7 @@
           <!-- Nút Ghép Âm Thanh Chính -->
           <button onclick="mergeRecordedSentences()" id="btn-merge-all" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#101D35] to-[#1D4ED8] hover:from-[#172B4D] hover:to-[#1E40AF] text-white text-xs font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all">
             <i data-lucide="scissors" class="w-4 h-4 text-[#38BDF8]"></i>
-            <span id="label-merge-btn">GHÉP THÀNH BÀI NỘP HOÀN CHỈNH (.MP3)</span>
+            <span id="label-merge-btn">GHÉP THÀNH BÀI NỘP HOÀN CHỈNH (.MP3 / .WAV)</span>
           </button>
         </div>
       </div>
@@ -296,7 +296,7 @@
         </div>
         <a id="merged-download-btn" href="#" download class="px-5 py-2.5 rounded-xl bg-[#16A36A] hover:bg-[#15803D] text-white text-xs font-bold flex items-center gap-2 shadow-sm transition-all">
           <i data-lucide="download" class="w-4 h-4"></i>
-          <span>Tải File MP3 Nộp Bài</span>
+          <span>Tải File Nộp Bài</span>
         </a>
       </div>
       <audio id="merged-audio-player" controls class="w-full h-11 rounded-lg"></audio>
@@ -812,10 +812,11 @@
     // Initialize App
     async function initApp() {
       safeCreateIcons();
-      // Try to load any updated scripts from server, fallback to embedded
+      // Try to load any updated scripts from server with safe JSON check
       try {
         const res = await fetch('/api/scripts');
-        if (res.ok) {
+        const cType = res.headers.get('content-type') || '';
+        if (res.ok && cType.includes('application/json')) {
           const remote = await res.json();
           if (remote && Object.keys(remote).length > 0) {
             scriptDatabase = remote;
@@ -1150,6 +1151,7 @@
 
           const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
           recordedChunksMap[itemKey] = {
+            blob: blob,
             base64: base64,
             blobUrl: blobUrl,
             duration: recordingSeconds,
@@ -1229,7 +1231,7 @@
       });
     }
 
-    // Evaluate sentence - 100% Keyless AI
+    // Evaluate sentence - 100% Keyless AI with Safe Fallback
     async function evaluateSentence(idx) {
       const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
       const rec = recordedChunksMap[itemKey];
@@ -1265,7 +1267,8 @@
           })
         });
 
-        if (res.ok) {
+        const cType = res.headers.get('content-type') || '';
+        if (res.ok && cType.includes('application/json')) {
           const data = await res.json();
           rec.evalData = data;
           if (evalBox) {
@@ -1279,7 +1282,7 @@
         throw new Error("Local fallback");
 
       } catch (err) {
-        // Fallback local evaluation (works completely offline)
+        // Fallback local evaluation (works completely offline, zero key)
         const fallbackData = computeClientPhoneticScore(targetText, rec.spokenText || "");
         rec.evalData = fallbackData;
         if (evalBox) {
@@ -1393,7 +1396,248 @@
       if (progBar) progBar.style.width = `${pct}%`;
     }
 
-    // Merge sentences into final MP3 with AI Smart Processing
+    // ========================================================
+    // CLIENT-SIDE WEB AUDIO SPLICER (100% In-Browser Fallback)
+    // Works flawlessly on Vercel, static servers & offline!
+    // ========================================================
+
+    async function spliceAudioOnClient(sentences, audioNum, speaker, silenceMs, trimSilence, normalize, autoFallback) {
+      const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtxClass) {
+        throw new Error("Trình duyệt không hỗ trợ Web Audio API.");
+      }
+      const audioCtx = new AudioCtxClass();
+
+      const decodedBuffers = [];
+
+      for (let idx = 0; idx < sentences.length; idx++) {
+        const itemKey = `${audioNum}_${speaker}_${idx}`;
+        const rec = recordedChunksMap[itemKey];
+
+        let arrayBuffer = null;
+
+        // 1. If user recorded this sentence, read recorded blob / base64
+        if (rec && rec.blob) {
+          try {
+            arrayBuffer = await rec.blob.arrayBuffer();
+          } catch (e) {
+            console.warn(`Could not read recorded blob for sentence ${idx + 1}:`, e);
+          }
+        } else if (rec && rec.blobUrl) {
+          try {
+            const resp = await fetch(rec.blobUrl);
+            arrayBuffer = await resp.arrayBuffer();
+          } catch (e) {
+            console.warn(`Could not fetch blobUrl for sentence ${idx + 1}:`, e);
+          }
+        } else if (rec && rec.base64) {
+          try {
+            const b64 = rec.base64.includes(',') ? rec.base64.split(',')[1] : rec.base64;
+            const bin = atob(b64);
+            const bytes = new Uint8Array(bin.length);
+            for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+            arrayBuffer = bytes.buffer;
+          } catch (e) {
+            console.warn(`Could not decode base64 for sentence ${idx + 1}:`, e);
+          }
+        }
+
+        // 2. If unrecorded and autoFallback is on, use pre-generated native sample audio
+        if (!arrayBuffer && autoFallback) {
+          const sampleUrl = `sample_audio/audio_${audioNum}_spk_${speaker}_sent_${idx}.mp3`;
+          try {
+            const resp = await fetch(sampleUrl);
+            if (resp.ok) {
+              arrayBuffer = await resp.arrayBuffer();
+            }
+          } catch (e) {
+            console.warn(`Could not load sample audio ${sampleUrl}:`, e);
+          }
+        }
+
+        // Decode audio data to AudioBuffer
+        if (arrayBuffer) {
+          try {
+            const audioBuf = await audioCtx.decodeAudioData(arrayBuffer.slice(0));
+            let processedBuf = audioBuf;
+
+            // Silence trimming (Smart VAD)
+            if (trimSilence) {
+              processedBuf = trimSilenceAudioBuffer(audioCtx, processedBuf);
+            }
+
+            // Anti-click micro-fades (15ms)
+            applyMicroFades(processedBuf);
+
+            decodedBuffers.push(processedBuf);
+          } catch (decErr) {
+            console.warn(`Error decoding audio for sentence ${idx + 1}:`, decErr);
+          }
+        }
+      }
+
+      if (decodedBuffers.length === 0) {
+        throw new Error("Không có đoạn âm thanh nào để ghép. Hãy thu ít nhất 1 câu hoặc bật tùy chọn bù giọng mẫu!");
+      }
+
+      // Concatenate all buffers using OfflineAudioContext
+      const targetSampleRate = 44100;
+      const silenceSamples = Math.round((silenceMs / 1000) * targetSampleRate);
+
+      let totalSamples = 0;
+      decodedBuffers.forEach((buf, i) => {
+        const resampledLen = Math.round((buf.length / buf.sampleRate) * targetSampleRate);
+        totalSamples += resampledLen;
+        if (i < decodedBuffers.length - 1) {
+          totalSamples += silenceSamples;
+        }
+      });
+
+      const offlineCtx = new OfflineAudioContext(1, Math.max(1024, totalSamples), targetSampleRate);
+      let currentOffsetSec = 0;
+
+      decodedBuffers.forEach((buf, i) => {
+        const src = offlineCtx.createBufferSource();
+        src.buffer = buf;
+        src.connect(offlineCtx.destination);
+        src.start(currentOffsetSec);
+        currentOffsetSec += buf.duration + (silenceMs / 1000);
+      });
+
+      const renderedBuffer = await offlineCtx.startRendering();
+
+      // Peak Loudness Normalization
+      if (normalize) {
+        normalizeAudioBuffer(renderedBuffer);
+      }
+
+      // Convert to WAV Blob
+      return audioBufferToWavBlob(renderedBuffer);
+    }
+
+    // Smart VAD silence trimming on client AudioBuffer
+    function trimSilenceAudioBuffer(ctx, buffer, threshold = 0.015, padSec = 0.06) {
+      const data = buffer.getChannelData(0);
+      const len = data.length;
+      let start = 0;
+      let end = len - 1;
+
+      for (let i = 0; i < len; i++) {
+        if (Math.abs(data[i]) > threshold) {
+          start = i;
+          break;
+        }
+      }
+
+      for (let i = len - 1; i >= 0; i--) {
+        if (Math.abs(data[i]) > threshold) {
+          end = i;
+          break;
+        }
+      }
+
+      const padSamples = Math.round(padSec * buffer.sampleRate);
+      start = Math.max(0, start - padSamples);
+      end = Math.min(len - 1, end + padSamples);
+
+      if (end <= start) return buffer;
+
+      const trimmedLen = end - start + 1;
+      const newBuf = ctx.createBuffer(buffer.numberOfChannels, trimmedLen, buffer.sampleRate);
+      for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+        const chData = buffer.getChannelData(ch);
+        const subData = chData.subarray(start, end + 1);
+        newBuf.copyToChannel(subData, ch);
+      }
+      return newBuf;
+    }
+
+    // Apply 15ms micro-fades at boundaries to eliminate click/pop noise
+    function applyMicroFades(buffer, fadeSec = 0.015) {
+      const fadeSamples = Math.min(Math.round(fadeSec * buffer.sampleRate), Math.floor(buffer.length / 2));
+      if (fadeSamples <= 0) return;
+
+      for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+        const data = buffer.getChannelData(ch);
+        for (let i = 0; i < fadeSamples; i++) {
+          data[i] *= (i / fadeSamples);
+        }
+        const total = buffer.length;
+        for (let i = 0; i < fadeSamples; i++) {
+          data[total - 1 - i] *= (i / fadeSamples);
+        }
+      }
+    }
+
+    // Normalize audio volume peak to -1dB
+    function normalizeAudioBuffer(buffer, targetPeak = 0.89) {
+      let maxPeak = 0;
+      for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+        const data = buffer.getChannelData(ch);
+        for (let i = 0; i < data.length; i++) {
+          const abs = Math.abs(data[i]);
+          if (abs > maxPeak) maxPeak = abs;
+        }
+      }
+
+      if (maxPeak > 0 && maxPeak !== targetPeak) {
+        const gain = targetPeak / maxPeak;
+        for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+          const data = buffer.getChannelData(ch);
+          for (let i = 0; i < data.length; i++) {
+            data[i] = Math.max(-1, Math.min(1, data[i] * gain));
+          }
+        }
+      }
+    }
+
+    // Convert AudioBuffer to standard 16-bit PCM WAV Blob
+    function audioBufferToWavBlob(buffer) {
+      const numChannels = 1; // mono speech
+      const sampleRate = buffer.sampleRate;
+      const samples = buffer.getChannelData(0);
+      const bitDepth = 16;
+      const bytesPerSample = bitDepth / 8;
+      const blockAlign = numChannels * bytesPerSample;
+      const wavBuffer = new ArrayBuffer(44 + samples.length * bytesPerSample);
+      const view = new DataView(wavBuffer);
+
+      function writeStr(v, o, s) {
+        for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i));
+      }
+
+      // RIFF chunk
+      writeStr(view, 0, 'RIFF');
+      view.setUint32(4, 36 + samples.length * bytesPerSample, true);
+      writeStr(view, 8, 'WAVE');
+
+      // fmt subchunk
+      writeStr(view, 12, 'fmt ');
+      view.setUint32(16, 16, true); // Subchunk1Size (16 for PCM)
+      view.setUint16(20, 1, true);  // AudioFormat (1 for PCM)
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * blockAlign, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, bitDepth, true);
+
+      // data subchunk
+      writeStr(view, 36, 'data');
+      view.setUint32(40, samples.length * bytesPerSample, true);
+
+      let offset = 44;
+      for (let i = 0; i < samples.length; i++, offset += 2) {
+        let s = Math.max(-1, Math.min(1, samples[i]));
+        view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      }
+
+      return new Blob([wavBuffer], { type: 'audio/wav' });
+    }
+
+    // ========================================================
+    // DUAL-MODE MERGE CONTROLLER
+    // Tries Server (FFmpeg) -> Falls back to In-Browser Web Audio
+    // ========================================================
     async function mergeRecordedSentences() {
       const sentences = getCurrentSentenceList();
       if (!sentences || sentences.length === 0) {
@@ -1416,86 +1660,122 @@
       const mergeBtn = document.getElementById('btn-merge-all');
       const mergeLabel = document.getElementById('label-merge-btn');
 
-      let payloadSentences = [];
       let recordedCount = 0;
-
       sentences.forEach((s, idx) => {
         const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
         const rec = recordedChunksMap[itemKey];
-        if (rec && rec.base64) {
+        if (rec && (rec.blob || rec.base64 || rec.blobUrl)) {
           recordedCount++;
-          payloadSentences.push({
-            num: idx + 1,
-            text: s.text,
-            audioBase64: rec.base64,
-            useFallbackTts: false
-          });
-        } else {
-          payloadSentences.push({
-            num: idx + 1,
-            text: s.text,
-            audioBase64: "",
-            useFallbackTts: autoFallback
-          });
         }
       });
 
       if (recordedCount === 0 && !autoFallback) {
-        showToast('warning', 'Chưa thu âm', 'Vui lòng thu ít nhất 1 câu hoặc bật tùy chọn bù câu bằng AI!');
+        showToast('warning', 'Chưa thu âm', 'Vui lòng thu ít nhất 1 câu hoặc bật tùy chọn bù giọng mẫu!');
         return;
       }
 
       if (mergeBtn) mergeBtn.disabled = true;
-      if (mergeLabel) mergeLabel.innerText = `ĐANG XỬ LÝ AI & CẮT GHÉP ${sentences.length} CÂU...`;
+      if (mergeLabel) mergeLabel.innerText = `ĐANG XỬ LÝ & CẮT GHÉP ${sentences.length} CÂU...`;
 
       try {
-        const res = await fetch('/api/voice/merge-sentences', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            audioNum: currentAudio,
-            speaker: currentSpeaker,
-            silenceMs: silenceMs,
-            cleanNoise: cleanNoise,
-            trimSilence: trimSilence,
-            normalize: normalize,
-            sentences: payloadSentences
-          })
-        });
+        let finalAudioUrl = null;
+        let finalFileName = `Bai_Nop_Audio_${currentAudio}_Speaker_${currentSpeaker}.wav`;
+        let engineDesc = "";
+        let serverHandled = false;
 
-        const data = await res.json();
-        if (data.success && data.audioUrl) {
-          const card = document.getElementById('merged-result-card');
-          const title = document.getElementById('merged-title-text');
-          const player = document.getElementById('merged-audio-player');
-          const dl = document.getElementById('merged-download-btn');
-          const details = document.getElementById('merged-status-details');
+        // 1. Try server endpoint first (FFmpeg AI Filters if local Python server is running)
+        try {
+          let payloadSentences = [];
+          sentences.forEach((s, idx) => {
+            const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
+            const rec = recordedChunksMap[itemKey];
+            if (rec && rec.base64) {
+              payloadSentences.push({
+                num: idx + 1,
+                text: s.text,
+                audioBase64: rec.base64,
+                useFallbackTts: false
+              });
+            } else {
+              payloadSentences.push({
+                num: idx + 1,
+                text: s.text,
+                audioBase64: "",
+                useFallbackTts: autoFallback
+              });
+            }
+          });
 
-          const finalUrl = data.audioUrl + '?t=' + Date.now();
-          if (player) player.src = finalUrl;
-          if (dl) {
-            dl.href = data.audioUrl;
-            dl.download = data.fileName;
+          const res = await fetch('/api/voice/merge-sentences', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              audioNum: currentAudio,
+              speaker: currentSpeaker,
+              silenceMs: silenceMs,
+              cleanNoise: cleanNoise,
+              trimSilence: trimSilence,
+              normalize: normalize,
+              sentences: payloadSentences
+            })
+          });
+
+          // Crucial check: only parse JSON if response is OK and header is application/json!
+          const cType = res.headers.get('content-type') || '';
+          if (res.ok && cType.includes('application/json')) {
+            const data = await res.json();
+            if (data.success && data.audioUrl) {
+              finalAudioUrl = data.audioUrl + '?t=' + Date.now();
+              finalFileName = data.fileName || `Bai_Nop_Audio_${currentAudio}_Speaker_${currentSpeaker}.mp3`;
+              engineDesc = "Xử lý bằng FFmpeg AI Smart Filters (Server).";
+              serverHandled = true;
+            }
           }
-
-          if (title) title.innerText = `Đã Ghép Xong Bài Nộp Audio ${currentAudio} - Speaker ${currentSpeaker}!`;
-          if (details) details.innerText = `Ghép thành công ${data.mergedCount} câu (gồm ${recordedCount} câu giọng thật của bạn). Lọc sạch dead-air và chuẩn hóa âm lượng.`;
-
-          if (card) {
-            card.classList.remove('hidden');
-            card.scrollIntoView({ behavior: 'smooth' });
-          }
-          if (player) player.play();
-
-          showToast('success', 'Xử lý AI hoàn tất', `Bài Nộp Audio ${currentAudio} đã xuất file MP3 192kbps chuẩn nộp bài!`);
-        } else {
-          showToast('error', 'Lỗi ghép file', data.error || 'Lỗi server');
+        } catch (netErr) {
+          console.warn("Server merge endpoint not available, falling back to Client Web Audio:", netErr);
         }
+
+        // 2. If server didn't handle it (e.g. running on Vercel or offline), run Client Web Audio Splicer!
+        if (!serverHandled) {
+          if (mergeLabel) mergeLabel.innerText = `ĐANG GHÉP TRỰC TIẾP TRÊN TRÌNH DUYỆT (WEB AUDIO)...`;
+          const clientBlob = await spliceAudioOnClient(
+            sentences, currentAudio, currentSpeaker, silenceMs, trimSilence, normalize, autoFallback
+          );
+          finalAudioUrl = URL.createObjectURL(clientBlob);
+          finalFileName = `Bai_Nop_Audio_${currentAudio}_Speaker_${currentSpeaker}.wav`;
+          engineDesc = "Xử lý trực tiếp trên trình duyệt bằng Web Audio API (Chuẩn 16-bit PCM WAV).";
+        }
+
+        // 3. Render Output Card
+        const card = document.getElementById('merged-result-card');
+        const title = document.getElementById('merged-title-text');
+        const player = document.getElementById('merged-audio-player');
+        const dl = document.getElementById('merged-download-btn');
+        const details = document.getElementById('merged-status-details');
+
+        if (player) player.src = finalAudioUrl;
+        if (dl) {
+          dl.href = finalAudioUrl;
+          dl.download = finalFileName;
+        }
+
+        if (title) title.innerText = `Đã Ghép Xong Bài Nộp Audio ${currentAudio} - Speaker ${currentSpeaker}!`;
+        if (details) details.innerText = `Ghép thành công ${sentences.length} câu (gồm ${recordedCount} câu giọng thật của bạn). ${engineDesc}`;
+
+        if (card) {
+          card.classList.remove('hidden');
+          card.scrollIntoView({ behavior: 'smooth' });
+        }
+        if (player) player.play();
+
+        showToast('success', 'Cắt ghép thành công', `Bài Nộp Audio ${currentAudio} đã hoàn tất và sẵn sàng tải về!`);
+
       } catch (e) {
-        showToast('error', 'Lỗi kết nối', e.message);
+        console.error("Merge error:", e);
+        showToast('error', 'Lỗi cắt ghép', e.message || 'Không thể ghép âm thanh');
       } finally {
         if (mergeBtn) mergeBtn.disabled = false;
-        if (mergeLabel) mergeLabel.innerText = "GHÉP THÀNH BÀI NỘP HOÀN CHỈNH (.MP3)";
+        if (mergeLabel) mergeLabel.innerText = "GHÉP THÀNH BÀI NỘP HOÀN CHỈNH (.MP3 / .WAV)";
       }
     }
 
