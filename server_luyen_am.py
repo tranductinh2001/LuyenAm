@@ -263,10 +263,22 @@ class VoiceStudioHandler(SimpleHTTPRequestHandler):
                 return
 
             rate = "-4%"
-            if "chậm" in prompt or level == "75":
-                rate = "-8%"
+            speed_val = req_data.get("speed")
+            if speed_val is not None:
+                try:
+                    s = float(speed_val)
+                    if s <= 0.8:
+                        rate = "-25%"
+                    elif s >= 1.2:
+                        rate = "+25%"
+                    else:
+                        rate = "-2%"
+                except Exception:
+                    pass
+            elif "chậm" in prompt or level == "75":
+                rate = "-15%"
             elif "nhanh" in prompt or level == "88":
-                rate = "+0%"
+                rate = "+15%"
 
             try:
                 out_name = asyncio.run(synth_voice(text, voice, rate=rate))
@@ -331,12 +343,10 @@ class VoiceStudioHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": f"Lỗi ghép âm thanh: {str(e)}"}).encode("utf-8"))
             return
 
-        if path == "/api/voice/evaluate-sentence":
+        if path in ["/api/voice/evaluate", "/api/voice/evaluate-sentence"]:
             target_text = req_data.get("targetText", "").strip()
             spoken_text = req_data.get("spokenText", "").strip()
             audio_num = int(req_data.get("audioNum", 1))
-            b64_data = req_data.get("audioBase64", "")
-            api_key = req_data.get("beeApiKey", "")
 
             if not target_text:
                 self.send_response(400)
@@ -345,35 +355,8 @@ class VoiceStudioHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"error": "Thiếu câu văn bản mục tiêu"}).encode("utf-8"))
                 return
 
-            cloud_eval = None
-            if b64_data and len(b64_data) > 100:
-                temp_dir = tempfile.mkdtemp(prefix="eval_audio_")
-                try:
-                    if "," in b64_data:
-                        b64_data = b64_data.split(",", 1)[1]
-                    raw_bytes = base64.b64decode(b64_data)
-                    raw_bin = os.path.join(temp_dir, "raw.bin")
-                    with open(raw_bin, "wb") as f:
-                        f.write(raw_bytes)
-
-                    transcoded_mp3 = os.path.join(temp_dir, "eval.mp3")
-                    res = subprocess.run([
-                        "ffmpeg", "-y", "-i", raw_bin,
-                        "-c:a", "libmp3lame", "-b:a", "128k",
-                        transcoded_mp3
-                    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-                    if res.returncode == 0 and os.path.exists(transcoded_mp3):
-                        cloud_eval = evaluator.evaluate_with_beeknoee_cloud(
-                            transcoded_mp3, target_text, audio_num, api_key
-                        )
-                finally:
-                    shutil.rmtree(temp_dir, ignore_errors=True)
-
-            if cloud_eval:
-                final_res = cloud_eval
-            else:
-                final_res = evaluator.local_phonetic_evaluate(target_text, spoken_text, audio_num)
+            # Pure local phonetic evaluation - ZERO API key required, 100% offline & fast!
+            final_res = evaluator.local_phonetic_evaluate(target_text, spoken_text, audio_num)
 
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
