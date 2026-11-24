@@ -26,3 +26,9 @@
 - **Trực tiếp trên Vercel:** Deploy nhanh dưới dạng Static Web App.
 - **Chạy cục bộ:** Cổng 5180 (`python server_luyen_am.py` hoặc nhấp đúp `Chay_Studio_Cong_5180.bat`).
 
+## 👤 Thông Tin Tác Giả & Hỗ Trợ
+- **Tác giả & Phát triển:** **Trần Đức Tình**
+- **Zalo / Hotline:** **[0352911750](https://zalo.me/0352911750)**
+- **Môn học:** Luyện âm căn bản (LACB) - Văn bằng 2 Ngôn ngữ Anh (VB2)
+- **GitHub Repository:** [https://github.com/tranductinh2001/LuyenAm.git](https://github.com/tranductinh2001/LuyenAm.git)
+

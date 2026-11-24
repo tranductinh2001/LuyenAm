@@ -1,7 +1,8 @@
 # BÁO CÁO TOÀN DIỆN: KHÔI PHỤC API, TÁI SỬ DỤNG DỮ LIỆU GIỌNG NÓI VÀ HOÀN THIỆN PROJECT BIT1
 
-**Dự án triển khai:** Bit1 Voice Studio (Hệ thống xử lý giọng nói tiếng Anh AI, Thu âm từng câu, Cắt ghép bài & Đánh giá phát âm tức thì Beeknoee AI)  
-**Thời gian cập nhật:** 23/11/2026  
+**Dự án triển khai:** Bit1 Voice Studio (Hệ thống xử lý giọng nói tiếng Anh AI, Thu âm từng câu, Cắt ghép bài & Đánh giá phát âm tức thì)  
+**Tác giả & Phát triển:** **Trần Đức Tình** (Zalo / SĐT: 0352911750)  
+**Thời gian cập nhật:** 24/11/2026  
 **Chuyên gia phụ trách:** Senior Full-stack Developer, AI Engineer & Software Architect  
 
 ---
