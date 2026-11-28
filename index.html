@@ -275,8 +275,8 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
           <div class="flex items-center gap-4 text-xs text-[#667085] flex-wrap">
             <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" id="chk-auto-fallback" checked class="w-4 h-4 text-[#1D4ED8] rounded">
-              <span>Tự động bù giọng bản xứ nếu câu chưa kịp thu</span>
+              <input type="checkbox" id="chk-auto-fallback" class="w-4 h-4 text-[#1D4ED8] rounded">
+              <span>Bù giọng mẫu cho câu chưa thu (chỉ bật nếu cần)</span>
             </label>
             <div class="flex items-center gap-1.5">
               <span>Khoảng nghỉ:</span>
@@ -323,6 +323,36 @@
     <!-- 3. DANH SÁCH CÁC CÂU CỦA BÀI (THU ÂM, NGHE MẪU ĐA TỐC ĐỘ, ĐÁNH GIÁ AI KHÔNG CẦN KEY) -->
     <div class="space-y-4" id="sentences-container">
       <!-- Sẽ được render tự động bằng Javascript -->
+    </div>
+
+    <!-- 3.5. QUY TRÌNH AI VOICE CONVERSION (GOOGLE COLAB GPU MIỄN PHÍ) -->
+    <div class="bg-gradient-to-br from-[#F8FAFC] to-[#EFF6FF] border border-[#BFDBFE] rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 class="text-sm font-bold text-[#101D35] flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4 text-[#1D4ED8]"></i>
+            AI Chuyển Giọng Bản Xứ Sang Giọng Thật Của Bạn (Google Colab T4 GPU)
+          </h3>
+          <p class="text-xs text-[#475569] mt-0.5">
+            Thu ít nhất 2–3 câu giọng thật bên dưới → Xuất mẫu giọng → Chạy Colab Seed-VC → Nạp lại vào từng câu và ghép thành 1 file hoàn chỉnh tự nhiên.
+          </p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button onclick="exportVoiceSampleForColab()" id="btn-export-sample" class="px-3.5 py-2 rounded-xl bg-white border border-[#CBD5E1] hover:border-[#1D4ED8] text-[#1D4ED8] text-xs font-bold shadow-xs flex items-center gap-1.5 transition-all">
+            <i data-lucide="mic" class="w-3.5 h-3.5"></i>
+            <span>1. Xuất Giọng Mẫu (.WAV)</span>
+          </button>
+          <a href="/Colab_SeedVC_Voice_Conversion.ipynb" download class="px-3.5 py-2 rounded-xl bg-[#101D35] hover:bg-[#1E293B] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 transition-all">
+            <i data-lucide="file-code" class="w-3.5 h-3.5"></i>
+            <span>2. Tải Colab Notebook</span>
+          </a>
+          <label class="px-3.5 py-2 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer transition-all">
+            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+            <span>3. Nạp File Đã Convert</span>
+            <input type="file" multiple accept="audio/*" onchange="bulkImportConvertedAudio(this)" class="hidden">
+          </label>
+        </div>
+      </div>
     </div>
 
     <!-- 4. KHU VỰC TẢI NHANH 10 FILE BÀI NỘP HOÀN CHỈNH SẴN CÓ -->
@@ -1121,6 +1151,13 @@
                   <span>Chấm Điểm Phát Âm AI</span>
                 </button>
 
+                <!-- Nút Nạp File Audio Riêng Cho Câu Này (Colab / Ghi âm ngoài) -->
+                <label title="Nạp file âm thanh (.mp3/.wav) từ Colab hoặc máy vào câu này" class="inline-flex px-3 py-2 rounded-xl text-xs font-bold bg-white border border-[#E5EAF1] hover:border-[#1D4ED8] text-[#475569] hover:text-[#1D4ED8] items-center gap-1.5 cursor-pointer transition-all">
+                  <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                  <span>Nạp file</span>
+                  <input type="file" accept="audio/*" onchange="uploadSentenceAudio(${idx}, this)" class="hidden">
+                </label>
+
               </div>
 
               <!-- Player nghe lại giọng người dùng đã thu -->
@@ -1563,6 +1600,22 @@
       });
 
       const offlineCtx = new OfflineAudioContext(1, Math.max(1024, totalSamples), targetSampleRate);
+      // Fill background with ultra-subtle warm room-tone (-65dB) so gaps never drop to dead digital 0
+      const roomToneBuf = offlineCtx.createBuffer(1, Math.max(1024, totalSamples), targetSampleRate);
+      const rtData = roomToneBuf.getChannelData(0);
+      let b0 = 0, b1 = 0, b2 = 0;
+      for (let i = 0; i < rtData.length; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99765 * b0 + white * 0.0990460;
+        b1 = 0.96300 * b1 + white * 0.2965164;
+        b2 = 0.57000 * b2 + white * 1.0526913;
+        rtData[i] = (b0 + b1 + b2 + white * 0.1848) * 0.00012;
+      }
+      const rtSrc = offlineCtx.createBufferSource();
+      rtSrc.buffer = roomToneBuf;
+      rtSrc.connect(offlineCtx.destination);
+      rtSrc.start(0);
+
       let currentOffsetSec = 0;
 
       decodedBuffers.forEach((buf, i) => {
@@ -1584,8 +1637,8 @@
       return audioBufferToWavBlob(renderedBuffer);
     }
 
-    // Smart VAD silence trimming on client AudioBuffer
-    function trimSilenceAudioBuffer(ctx, buffer, threshold = 0.015, padSec = 0.06) {
+    // Smart VAD silence trimming on client AudioBuffer (gentle threshold + 100ms pad to preserve soft endings)
+    function trimSilenceAudioBuffer(ctx, buffer, threshold = 0.005, padSec = 0.10) {
       const data = buffer.getChannelData(0);
       const len = data.length;
       let start = 0;
@@ -1720,7 +1773,7 @@
       const chkTrim = document.getElementById('chk-trim-silence');
       const chkNorm = document.getElementById('chk-normalize');
 
-      const autoFallback = chkFallback ? chkFallback.checked : true;
+      const autoFallback = chkFallback ? chkFallback.checked : false;
       const silenceMs = selSilence ? parseInt(selSilence.value) : 350;
       const cleanNoise = chkNoise ? chkNoise.checked : true;
       const trimSilence = chkTrim ? chkTrim.checked : true;
@@ -1833,8 +1886,9 @@
           dl.download = finalFileName;
         }
 
+        const mergedTotal = autoFallback ? sentences.length : recordedCount;
         if (title) title.innerText = `Đã Ghép Xong Bài Nộp Audio ${currentAudio} - ${roleLabel}!`;
-        if (details) details.innerText = `Ghép thành công ${sentences.length} câu (gồm ${recordedCount} câu giọng thật của bạn). ${engineDesc}`;
+        if (details) details.innerText = `Đã ghép ${mergedTotal} câu (100% giọng thật: ${recordedCount} câu). ${engineDesc}`;
 
         if (card) {
           card.classList.remove('hidden');
@@ -1891,6 +1945,132 @@
       }, 3500);
     }
 
+    // Upload / replace a single sentence audio from local file or Colab output
+    async function uploadSentenceAudio(idx, inputEl) {
+      const file = inputEl && inputEl.files && inputEl.files[0];
+      if (!file) return;
+      const sentences = getCurrentSentenceList();
+      const s = sentences[idx];
+      if (!s) return;
+      try {
+        const base64 = await blobToBase64(file);
+        const blobUrl = URL.createObjectURL(file);
+        const itemKey = getSentenceKeyFor(currentAudio, s);
+        recordedChunksMap[itemKey] = {
+          blob: file,
+          base64: base64,
+          blobUrl: blobUrl,
+          duration: 0,
+          spokenText: s.text
+        };
+        renderSentences();
+        showToast('success', 'Đã nạp âm thanh', `Đã gắn "${file.name}" vào Câu ${idx + 1}.`);
+      } catch (e) {
+        showToast('error', 'Lỗi nạp file', e.message || 'Không thể đọc file âm thanh.');
+      } finally {
+        inputEl.value = '';
+      }
+    }
+
+    // Bulk import multiple converted files (e.g. audio_1_spk_1_sent_0.wav) from Colab
+    async function bulkImportConvertedAudio(inputEl) {
+      const files = inputEl && inputEl.files ? Array.from(inputEl.files) : [];
+      if (files.length === 0) return;
+
+      let matched = 0;
+      const sentences = getCurrentSentenceList();
+
+      for (const file of files) {
+        const name = file.name.toLowerCase();
+        // Match pattern: audio_<A>_spk_<S>_sent_<I>
+        const m = name.match(/audio_(\d+)_spk_(\d+)_sent_(\d+)/);
+        if (m) {
+          const aNum = parseInt(m[1], 10);
+          const spk = parseInt(m[2], 10);
+          const sIdx = parseInt(m[3], 10);
+          const itemKey = `${aNum}_${spk}_${sIdx}`;
+          const base64 = await blobToBase64(file);
+          recordedChunksMap[itemKey] = {
+            blob: file,
+            base64: base64,
+            blobUrl: URL.createObjectURL(file),
+            duration: 0,
+            spokenText: ''
+          };
+          matched++;
+          continue;
+        }
+        // Fallback match: cau_<N> or sent_<N> (1-based or 0-based in current view)
+        const mCau = name.match(/(?:cau|sentence|line)[_-]?(\d+)/);
+        if (mCau) {
+          const idx = parseInt(mCau[1], 10) - 1;
+          if (idx >= 0 && idx < sentences.length) {
+            const itemKey = getSentenceKeyFor(currentAudio, sentences[idx]);
+            const base64 = await blobToBase64(file);
+            recordedChunksMap[itemKey] = {
+              blob: file,
+              base64: base64,
+              blobUrl: URL.createObjectURL(file),
+              duration: 0,
+              spokenText: sentences[idx].text
+            };
+            matched++;
+          }
+        }
+      }
+
+      inputEl.value = '';
+      renderSentences();
+      if (matched > 0) {
+        showToast('success', 'Nạp hàng loạt thành công', `Đã nạp ${matched} file âm thanh vào kịch bản.`);
+      } else {
+        showToast('warning', 'Không khớp tên file', 'Hãy đặt tên dạng audio_1_spk_1_sent_0.wav hoặc nạp từng câu.');
+      }
+    }
+
+    // Export user's recorded sentences as a single clean WAV sample for Google Colab Seed-VC
+    async function exportVoiceSampleForColab() {
+      const audioList = [];
+      Object.values(recordedChunksMap).forEach(rec => {
+        if (rec && rec.base64) audioList.push(rec.base64);
+      });
+
+      if (audioList.length === 0) {
+        showToast('warning', 'Chưa có giọng thu', 'Hãy thu ít nhất 2–3 câu bằng giọng thật của bạn trước khi xuất mẫu!');
+        return;
+      }
+
+      const btn = document.getElementById('btn-export-sample');
+      if (btn) btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/voice/export-sample', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ audioList: audioList })
+        });
+        const cType = res.headers.get('content-type') || '';
+        if (res.ok && cType.includes('application/json')) {
+          const data = await res.json();
+          if (data.success && data.audioUrl) {
+            const a = document.createElement('a');
+            a.href = data.audioUrl + '?t=' + Date.now();
+            a.download = data.fileName || 'My_Voice_Sample_Colab.wav';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            showToast('success', 'Đã xuất giọng mẫu (.WAV)', `Gộp ${data.count} câu thu thật thành My_Voice_Sample_Colab.wav.`);
+            return;
+          }
+        }
+        throw new Error('Server không phản hồi');
+      } catch (e) {
+        showToast('error', 'Lỗi xuất giọng mẫu', 'Hãy đảm bảo server cục bộ cổng 5180 đang chạy.');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
     // Explicitly bind all public functions to window for 100% inline onclick reliability
     window.selectAudio = selectAudio;
     window.selectSpeaker = selectSpeaker;
@@ -1900,6 +2080,9 @@
     window.toggleRecord = toggleRecord;
     window.evaluateSentence = evaluateSentence;
     window.mergeRecordedSentences = mergeRecordedSentences;
+    window.uploadSentenceAudio = uploadSentenceAudio;
+    window.bulkImportConvertedAudio = bulkImportConvertedAudio;
+    window.exportVoiceSampleForColab = exportVoiceSampleForColab;
     window.showToast = showToast;
 
     // Start App on Load

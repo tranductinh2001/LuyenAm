@@ -52,11 +52,14 @@ def merge_audio_chunks(sentences, audio_num, speaker_id, silence_ms=350, clean_n
     try:
         silence_sec = max(0.1, silence_ms / 1000.0)
         silence_wav = os.path.join(temp_dir, "silence.wav")
-        # Generate silence
+        # Generate subtle natural room-tone (-64dB warm mic ambience) instead of digital 0.0000 dead silence
+        fade_d = min(0.02, silence_sec / 3.0)
+        fade_out_st = max(0.0, silence_sec - fade_d)
         subprocess.run([
             "ffmpeg", "-y", "-f", "lavfi",
-            "-i", "anullsrc=r=44100:cl=stereo",
-            "-t", str(silence_sec),
+            "-i", f"anoisesrc=color=pink:amplitude=0.0006:r=44100:d={silence_sec}",
+            "-af", f"aformat=channel_layouts=stereo,highpass=f=100,lowpass=f=3500,afade=t=in:ss=0:d={fade_d},afade=t=out:st={fade_out_st}:d={fade_d}",
+            "-ar", "44100", "-ac", "2", "-c:a", "pcm_s16le",
             silence_wav
         ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
@@ -65,13 +68,18 @@ def merge_audio_chunks(sentences, audio_num, speaker_id, silence_ms=350, clean_n
         if clean_noise:
             chunk_filters.extend(["highpass=f=80", "lowpass=f=12000", "afftdn=nf=-25"])
         if trim_silence:
-            # Smart silence trim: trims dead air at start (>80ms below -38dB) and end (>150ms below -38dB)
-            chunk_filters.append("silenceremove=start_periods=1:start_duration=0.08:start_threshold=-38dB:detection=rms:stop_periods=1:stop_duration=0.15:stop_threshold=-38dB")
+            # Trim ONLY leading and trailing dead air (-48dB) using areverse so mid-sentence pauses are NEVER cut
+            chunk_filters.append(
+                "silenceremove=start_periods=1:start_duration=0.05:start_threshold=-48dB:detection=rms,"
+                "areverse,"
+                "silenceremove=start_periods=1:start_duration=0.05:start_threshold=-48dB:detection=rms,"
+                "areverse"
+            )
         if normalize:
             # Speech leveling
             chunk_filters.append("dynaudnorm=f=150:g=15:m=10.0:r=0.9:b=1")
-        # Micro fade-in to prevent click/pop at boundary
-        chunk_filters.append("afade=t=in:ss=0:d=0.015")
+        # Micro fade-in and fade-out (15ms) to prevent click/pop at both boundaries
+        chunk_filters.append("afade=t=in:ss=0:d=0.015,areverse,afade=t=in:ss=0:d=0.015,areverse")
         
         filter_str = ",".join(chunk_filters) if chunk_filters else "anull"
 
@@ -116,7 +124,7 @@ def merge_audio_chunks(sentences, audio_num, speaker_id, silence_ms=350, clean_n
             # Fallback to TTS if user didn't record or chunk was invalid
             if use_fallback and text:
                 tts_mp3 = os.path.join(temp_dir, f"tts_{num}.mp3")
-                sent_spk = s.get("speaker", speaker_id)
+                sent_spk = item.get("speaker", speaker_id)
                 fallback_voice = "en-US-AvaMultilingualNeural" if str(sent_spk) == "2" else "en-US-BrianMultilingualNeural"
                 asyncio.run(edge_tts.Communicate(text, voice=fallback_voice, rate="-4%").save(tts_mp3))
                 subprocess.run([
@@ -366,6 +374,78 @@ class VoiceStudioHandler(SimpleHTTPRequestHandler):
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(json.dumps(final_res, ensure_ascii=False).encode("utf-8"))
+            return
+
+        if path == "/api/voice/export-sample":
+            audio_list = req_data.get("audioList", [])
+            if not audio_list:
+                self.send_response(400)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": "Chưa có câu thu âm nào để xuất giọng mẫu."}).encode("utf-8"))
+                return
+
+            temp_dir = tempfile.mkdtemp(prefix="voice_sample_")
+            try:
+                wav_parts = []
+                for i, b64 in enumerate(audio_list):
+                    if not b64 or len(b64) < 100:
+                        continue
+                    if "," in b64:
+                        b64 = b64.split(",", 1)[1]
+                    raw_p = os.path.join(temp_dir, f"in_{i}.bin")
+                    wav_p = os.path.join(temp_dir, f"part_{i}.wav")
+                    with open(raw_p, "wb") as f:
+                        f.write(base64.b64decode(b64))
+                    res = subprocess.run([
+                        "ffmpeg", "-y", "-i", raw_p,
+                        "-af", "highpass=f=80,lowpass=f=12000,afftdn=nf=-25,silenceremove=start_periods=1:start_duration=0.05:start_threshold=-45dB:detection=rms,areverse,silenceremove=start_periods=1:start_duration=0.05:start_threshold=-45dB:detection=rms,areverse,dynaudnorm=f=150:g=15",
+                        "-ar", "24000", "-ac", "1", "-c:a", "pcm_s16le",
+                        wav_p
+                    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    if res.returncode == 0 and os.path.exists(wav_p) and os.path.getsize(wav_p) > 1000:
+                        wav_parts.append(wav_p)
+
+                if not wav_parts:
+                    raise ValueError("Không xử lý được đoạn thu âm nào.")
+
+                concat_txt = os.path.join(temp_dir, "concat.txt")
+                with open(concat_txt, "w", encoding="utf-8") as f:
+                    for wp in wav_parts:
+                        norm_wp = wp.replace("\\", "/")
+                        f.write(f"file '{norm_wp}'\n")
+
+                out_filename = "My_Voice_Sample_Colab.wav"
+                out_path = os.path.join(AUDIO_DIR, out_filename)
+                subprocess.run([
+                    "ffmpeg", "-y", "-f", "concat", "-safe", "0",
+                    "-i", concat_txt,
+                    "-ar", "24000", "-ac", "1", "-c:a", "pcm_s16le",
+                    out_path
+                ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+                res_data = {
+                    "success": True,
+                    "audioUrl": f"/BAI_NOP_HOAN_CHINH/{out_filename}",
+                    "fileName": out_filename,
+                    "count": len(wav_parts)
+                }
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps(res_data).encode("utf-8"))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"error": str(e)}).encode("utf-8"))
+            finally:
+                try:
+                    shutil.rmtree(temp_dir)
+                except Exception:
+                    pass
             return
 
         self.send_response(404)
