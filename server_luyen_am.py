@@ -116,7 +116,9 @@ def merge_audio_chunks(sentences, audio_num, speaker_id, silence_ms=350, clean_n
             # Fallback to TTS if user didn't record or chunk was invalid
             if use_fallback and text:
                 tts_mp3 = os.path.join(temp_dir, f"tts_{num}.mp3")
-                asyncio.run(edge_tts.Communicate(text, voice="en-US-BrianMultilingualNeural", rate="-4%").save(tts_mp3))
+                sent_spk = s.get("speaker", speaker_id)
+                fallback_voice = "en-US-AvaMultilingualNeural" if str(sent_spk) == "2" else "en-US-BrianMultilingualNeural"
+                asyncio.run(edge_tts.Communicate(text, voice=fallback_voice, rate="-4%").save(tts_mp3))
                 subprocess.run([
                     "ffmpeg", "-y", "-i", tts_mp3,
                     "-af", "dynaudnorm=f=150:g=15:m=10.0:r=0.9:b=1,afade=t=in:ss=0:d=0.015",
@@ -141,7 +143,8 @@ def merge_audio_chunks(sentences, audio_num, speaker_id, silence_ms=350, clean_n
                     f.write(f"file '{norm_s}'\n")
 
         # Output MP3 filename
-        out_filename = f"Bai_Ghi_Am_That_Audio_{audio_num}_Speaker_{speaker_id}.mp3"
+        role_suffix = "Full" if str(speaker_id) == "all" else f"Speaker_{speaker_id}"
+        out_filename = f"Bai_Ghi_Am_That_Audio_{audio_num}_{role_suffix}.mp3"
         out_path = os.path.join(AUDIO_DIR, out_filename)
 
         # Concatenate and Master with EBU R128 loudness normalization

@@ -205,21 +205,25 @@ HTML_CONTENT = r"""<!DOCTYPE html>
         </div>
       </div>
 
-      <!-- Hàng 2: Chọn Vai Thoại (Speaker 1 hoặc 2) -->
+      <!-- Hàng 2: Chọn Chế Độ Đọc (Cả 2 vai hoặc từng Speaker) -->
       <div class="pt-4 border-t border-[#E5EAF1] flex flex-col md:flex-row md:items-center justify-between gap-4">
         
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 flex-wrap">
           <label class="text-xs font-bold text-[#172033] uppercase tracking-wider shrink-0">
-            2. Vai thoại:
+            2. Chế độ đọc:
           </label>
-          <div class="flex items-center gap-2">
-            <button onclick="selectSpeaker(1)" id="tab-spk-1" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#1D4ED8] text-white shadow-sm flex items-center gap-1.5 transition-all">
+          <div class="flex items-center gap-2 flex-wrap">
+            <button onclick="selectSpeaker('all')" id="tab-spk-all" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#1D4ED8] text-white shadow-sm flex items-center gap-1.5 transition-all">
+              <i data-lucide="users" class="w-3.5 h-3.5"></i>
+              <span>Cả 2 vai (Toàn bài)</span>
+            </button>
+            <button onclick="selectSpeaker(1)" id="tab-spk-1" class="px-4 py-2 rounded-xl text-xs font-bold bg-white text-[#667085] border border-[#E5EAF1] hover:text-[#172033] flex items-center gap-1.5 transition-all">
               <i data-lucide="user" class="w-3.5 h-3.5"></i>
-              <span>Speaker 1 (Nam - Brian)</span>
+              <span>Chỉ Speaker 1</span>
             </button>
             <button onclick="selectSpeaker(2)" id="tab-spk-2" class="px-4 py-2 rounded-xl text-xs font-bold bg-white text-[#667085] border border-[#E5EAF1] hover:text-[#172033] flex items-center gap-1.5 transition-all">
-              <i data-lucide="users" class="w-3.5 h-3.5"></i>
-              <span>Speaker 2 (Nữ - Ava)</span>
+              <i data-lucide="user" class="w-3.5 h-3.5"></i>
+              <span>Chỉ Speaker 2</span>
             </button>
           </div>
         </div>
@@ -465,7 +469,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
 
     // State Variables
     let currentAudio = 1;
-    let currentSpeaker = 1;
+    let currentSpeaker = 'all';
     let currentPlaybackSpeed = 1.0; // 0.75, 1.0, 1.25
     let currentSampleAudio = null;
     let currentActiveSampleBtn = null;
@@ -534,20 +538,18 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       renderSentences();
     }
 
-    // Select Speaker 1 or 2
+    // Select Speaker ('all', 1, or 2)
     function selectSpeaker(spk) {
       currentSpeaker = spk;
-      const btn1 = document.getElementById('tab-spk-1');
-      const btn2 = document.getElementById('tab-spk-2');
-      if (btn1 && btn2) {
-        if (spk === 1) {
-          btn1.className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#1D4ED8] text-white shadow-sm flex items-center gap-1.5 transition-all";
-          btn2.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white text-[#667085] border border-[#E5EAF1] hover:text-[#172033] flex items-center gap-1.5 transition-all";
+      ['all', 1, 2].forEach(id => {
+        const btn = document.getElementById(`tab-spk-${id}`);
+        if (!btn) return;
+        if (id === spk) {
+          btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#1D4ED8] text-white shadow-sm flex items-center gap-1.5 transition-all";
         } else {
-          btn2.className = "px-4 py-2 rounded-xl text-xs font-bold bg-[#1D4ED8] text-white shadow-sm flex items-center gap-1.5 transition-all";
-          btn1.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white text-[#667085] border border-[#E5EAF1] hover:text-[#172033] flex items-center gap-1.5 transition-all";
+          btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white text-[#667085] border border-[#E5EAF1] hover:text-[#172033] flex items-center gap-1.5 transition-all";
         }
-      }
+      });
       stopSampleAudio();
       renderSentences();
     }
@@ -580,12 +582,26 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       showToast('info', 'Đã đổi tốc độ', `Tốc độ đọc mẫu hiện tại: ${speed}x`);
     }
 
+    function getSentenceKeyFor(audioNum, s) {
+      const spk = s && s.speaker ? s.speaker : currentSpeaker;
+      const idx = s && typeof s.spkIdx === 'number' ? s.spkIdx : 0;
+      return `${audioNum}_${spk}_${idx}`;
+    }
+
     function getCurrentSentenceList() {
       const data = scriptDatabase[currentAudio] || scriptDatabase[String(currentAudio)];
-      if (data) {
-        return currentSpeaker === 1 ? (data.speaker_1 || []) : (data.speaker_2 || []);
+      if (!data) return [];
+      const spk1 = (data.speaker_1 || []).map((s, i) => ({ ...s, speaker: 1, spkIdx: i }));
+      const spk2 = (data.speaker_2 || []).map((s, i) => ({ ...s, speaker: 2, spkIdx: i }));
+      if (currentSpeaker === 1) return spk1;
+      if (currentSpeaker === 2) return spk2;
+      const merged = [];
+      const maxLen = Math.max(spk1.length, spk2.length);
+      for (let i = 0; i < maxLen; i++) {
+        if (i < spk1.length) merged.push(spk1[i]);
+        if (i < spk2.length) merged.push(spk2[i]);
       }
-      return [];
+      return merged;
     }
 
     // Stop currently playing sample audio
@@ -615,7 +631,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       const chosenSpeed = (typeof speed === 'number' && speed > 0) ? speed : currentPlaybackSpeed;
       stopSampleAudio();
 
-      const samplePath = `sample_audio/audio_${currentAudio}_spk_${currentSpeaker}_sent_${idx}.mp3`;
+      const samplePath = `sample_audio/audio_${currentAudio}_spk_${s.speaker}_sent_${s.spkIdx}.mp3`;
       const audio = new Audio(samplePath);
       audio.playbackRate = chosenSpeed;
       currentSampleAudio = audio;
@@ -680,20 +696,24 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       let recordedCount = 0;
 
       sentences.forEach((s, idx) => {
-        const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
+        const itemKey = getSentenceKeyFor(currentAudio, s);
         const rec = recordedChunksMap[itemKey];
         const hasRec = Boolean(rec);
         if (hasRec) recordedCount++;
+        const spkBadge = s.speaker === 1
+          ? `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]">Speaker 1</span>`
+          : `<span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-[#F5F3FF] text-[#6D28D9] border border-[#DDD6FE]">Speaker 2</span>`;
 
         html += `
           <div id="sentence-card-${idx}" class="bg-white border ${hasRec ? 'border-[#A6F4C5] bg-[#F0FDF4]/30' : 'border-[#E5EAF1]'} rounded-2xl p-5 sm:p-6 shadow-sm transition-all space-y-3.5">
             
             <!-- Header Câu & Nghe Mẫu Tùy Chỉnh Tốc Độ -->
             <div class="flex items-center justify-between flex-wrap gap-2.5">
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 flex-wrap">
                 <span class="px-2.5 py-1 rounded-lg text-xs font-bold ${hasRec ? 'bg-[#ECFDF3] text-[#16A36A] border border-[#A6F4C5]' : 'bg-[#F5F7FA] text-[#667085] border border-[#E5EAF1]'} font-mono">
                   Câu ${idx + 1} / ${sentences.length}
                 </span>
+                ${spkBadge}
                 <span id="badge-status-${idx}" class="text-xs font-semibold ${hasRec ? 'text-[#16A36A]' : 'text-[#667085]'} flex items-center gap-1">
                   ${hasRec ? `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-[#16A36A]"></i> Đã thu (${rec.duration || 0}s)` : `<i data-lucide="circle-dashed" class="w-3.5 h-3.5 text-[#94A3B8]"></i> Chưa thu`}
                 </span>
@@ -834,7 +854,8 @@ HTML_CONTENT = r"""<!DOCTYPE html>
           const blobUrl = URL.createObjectURL(blob);
           const base64 = await blobToBase64(blob);
 
-          const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
+          const sentences = getCurrentSentenceList();
+          const itemKey = getSentenceKeyFor(currentAudio, sentences[idx]);
           recordedChunksMap[itemKey] = {
             blob: blob,
             base64: base64,
@@ -918,15 +939,15 @@ HTML_CONTENT = r"""<!DOCTYPE html>
 
     // Evaluate sentence - 100% Keyless AI with Safe Fallback
     async function evaluateSentence(idx) {
-      const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
+      const sentences = getCurrentSentenceList();
+      const sentenceObj = sentences[idx];
+      const itemKey = getSentenceKeyFor(currentAudio, sentenceObj);
       const rec = recordedChunksMap[itemKey];
       if (!rec || !rec.base64) {
         showToast('warning', 'Chưa thu âm', 'Vui lòng thu âm câu này trước khi chấm điểm.');
         return;
       }
 
-      const sentences = getCurrentSentenceList();
-      const sentenceObj = sentences[idx];
       const targetText = sentenceObj.text;
       const targetIpa = sentenceObj.ipa || "";
 
@@ -1069,8 +1090,8 @@ HTML_CONTENT = r"""<!DOCTYPE html>
     function updateProgress() {
       const sentences = getCurrentSentenceList();
       let count = 0;
-      sentences.forEach((s, idx) => {
-        const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
+      sentences.forEach((s) => {
+        const itemKey = getSentenceKeyFor(currentAudio, s);
         if (recordedChunksMap[itemKey]) count++;
       });
       const total = sentences.length;
@@ -1096,7 +1117,8 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       const decodedBuffers = [];
 
       for (let idx = 0; idx < sentences.length; idx++) {
-        const itemKey = `${audioNum}_${speaker}_${idx}`;
+        const s = sentences[idx];
+        const itemKey = getSentenceKeyFor(audioNum, s);
         const rec = recordedChunksMap[itemKey];
 
         let arrayBuffer = null;
@@ -1129,7 +1151,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
 
         // 2. If unrecorded and autoFallback is on, use pre-generated native sample audio
         if (!arrayBuffer && autoFallback) {
-          const sampleUrl = `sample_audio/audio_${audioNum}_spk_${speaker}_sent_${idx}.mp3`;
+          const sampleUrl = `sample_audio/audio_${audioNum}_spk_${s.speaker}_sent_${s.spkIdx}.mp3`;
           try {
             const resp = await fetch(sampleUrl);
             if (resp.ok) {
@@ -1346,8 +1368,8 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       const mergeLabel = document.getElementById('label-merge-btn');
 
       let recordedCount = 0;
-      sentences.forEach((s, idx) => {
-        const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
+      sentences.forEach((s) => {
+        const itemKey = getSentenceKeyFor(currentAudio, s);
         const rec = recordedChunksMap[itemKey];
         if (rec && (rec.blob || rec.base64 || rec.blobUrl)) {
           recordedCount++;
@@ -1362,9 +1384,12 @@ HTML_CONTENT = r"""<!DOCTYPE html>
       if (mergeBtn) mergeBtn.disabled = true;
       if (mergeLabel) mergeLabel.innerText = `ĐANG XỬ LÝ & CẮT GHÉP ${sentences.length} CÂU...`;
 
+      const roleSuffix = currentSpeaker === 'all' ? 'Full' : `Speaker_${currentSpeaker}`;
+      const roleLabel = currentSpeaker === 'all' ? 'Toàn Bài (Cả 2 Vai)' : `Speaker ${currentSpeaker}`;
+
       try {
         let finalAudioUrl = null;
-        let finalFileName = `Bai_Nop_Audio_${currentAudio}_Speaker_${currentSpeaker}.wav`;
+        let finalFileName = `Bai_Nop_Audio_${currentAudio}_${roleSuffix}.wav`;
         let engineDesc = "";
         let serverHandled = false;
 
@@ -1372,11 +1397,12 @@ HTML_CONTENT = r"""<!DOCTYPE html>
         try {
           let payloadSentences = [];
           sentences.forEach((s, idx) => {
-            const itemKey = `${currentAudio}_${currentSpeaker}_${idx}`;
+            const itemKey = getSentenceKeyFor(currentAudio, s);
             const rec = recordedChunksMap[itemKey];
             if (rec && rec.base64) {
               payloadSentences.push({
                 num: idx + 1,
+                speaker: s.speaker,
                 text: s.text,
                 audioBase64: rec.base64,
                 useFallbackTts: false
@@ -1384,6 +1410,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
             } else {
               payloadSentences.push({
                 num: idx + 1,
+                speaker: s.speaker,
                 text: s.text,
                 audioBase64: "",
                 useFallbackTts: autoFallback
@@ -1411,7 +1438,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
             const data = await res.json();
             if (data.success && data.audioUrl) {
               finalAudioUrl = data.audioUrl + '?t=' + Date.now();
-              finalFileName = data.fileName || `Bai_Nop_Audio_${currentAudio}_Speaker_${currentSpeaker}.mp3`;
+              finalFileName = data.fileName || `Bai_Nop_Audio_${currentAudio}_${roleSuffix}.mp3`;
               engineDesc = "Xử lý bằng FFmpeg AI Smart Filters (Server).";
               serverHandled = true;
             }
@@ -1427,7 +1454,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
             sentences, currentAudio, currentSpeaker, silenceMs, trimSilence, normalize, autoFallback
           );
           finalAudioUrl = URL.createObjectURL(clientBlob);
-          finalFileName = `Bai_Nop_Audio_${currentAudio}_Speaker_${currentSpeaker}.wav`;
+          finalFileName = `Bai_Nop_Audio_${currentAudio}_${roleSuffix}.wav`;
           engineDesc = "Xử lý trực tiếp trên trình duyệt bằng Web Audio API (Chuẩn 16-bit PCM WAV).";
         }
 
@@ -1444,7 +1471,7 @@ HTML_CONTENT = r"""<!DOCTYPE html>
           dl.download = finalFileName;
         }
 
-        if (title) title.innerText = `Đã Ghép Xong Bài Nộp Audio ${currentAudio} - Speaker ${currentSpeaker}!`;
+        if (title) title.innerText = `Đã Ghép Xong Bài Nộp Audio ${currentAudio} - ${roleLabel}!`;
         if (details) details.innerText = `Ghép thành công ${sentences.length} câu (gồm ${recordedCount} câu giọng thật của bạn). ${engineDesc}`;
 
         if (card) {

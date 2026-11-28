@@ -4,7 +4,7 @@ import json
 import re
 import os
 
-BASE_DIR = r"c:\Users\X1\Desktop\VB2\kì 1\luyện âm"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 all_audios = {}
 
 for num in range(1, 6):

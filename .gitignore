@@ -1,9 +1,11 @@
 __pycache__/
 *.pyc
-.env
+*.pyo
+*.log
 *.tmp
-
+.env
 
 ui-reference/
+recorded_sentences/
 BAI_NOP_HOAN_CHINH/gen_*.mp3
-recorded_sentences/gen_*.webm
+BAI_NOP_HOAN_CHINH/Bai_Ghi_Am_That_*.mp3
